@@ -1,0 +1,827 @@
+{
+  "0001": {
+    "local_nome": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA",
+    "endereco": "RUA PADRE MACEDO, S/N, CENTRO",
+    "observacao": ""
+  },
+  "0002": {
+    "local_nome": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA",
+    "endereco": "RUA PADRE MACEDO, S/N, CENTRO",
+    "observacao": ""
+  },
+  "0003": {
+    "local_nome": "CENTRO EDUCACIONAL DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA",
+    "observacao": ""
+  },
+  "0004": {
+    "local_nome": "CENTRO EDUCACIONAL DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA",
+    "observacao": ""
+  },
+  "0005": {
+    "local_nome": "CENTRO EDUCACIONAL DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA",
+    "observacao": ""
+  },
+  "0006": {
+    "local_nome": "EEIF FIRMINO ARARUNA DE SOUSA",
+    "endereco": "RUA ROSENDO MANOEL DE SOUSA, S/N ANAUA-DISTRITO",
+    "observacao": ""
+  },
+  "0007": {
+    "local_nome": "EEF FILEMON TELES",
+    "endereco": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0008": {
+    "local_nome": "POSTO DE SAÚDE DR. JOSÉ LEITE MARANHÃO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0142": {
+    "local_nome": "EEF OSSIAN ARARIPE",
+    "endereco": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0009": {
+    "local_nome": "CRECHE ARARINHA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0152": {
+    "local_nome": "CRECHE SRA. SANTANA",
+    "endereco": "RUA MAJOR JOAQUIM FURTADO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0010": {
+    "local_nome": "EEIF PEDRO MARANHÃO DE LACERDA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0170": {
+    "local_nome": "RUA CENTRAL S/N NOVA SANTA CRUZ-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0011": {
+    "local_nome": "EEIF PEDRO MARANHÃO DE LACERDA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0169": {
+    "local_nome": "SITIO ESTRELINHA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0012": {
+    "local_nome": "CRECHE SONHO INFANTIL",
+    "endereco": "RUA RAIMUNDO ALVES FERNANDES, S/N, SÃO FÉLIX-DISTRITO",
+    "observacao": ""
+  },
+  "0013": {
+    "local_nome": "EEF OSSIAN ARARIPE",
+    "endereco": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0014": {
+    "local_nome": "EEF OSSIAN ARARIPE",
+    "endereco": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0015": {
+    "local_nome": "CRECHE ARCO-IRIS",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0117": {
+    "local_nome": "CAPELA SÃO PEDRO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0016": {
+    "local_nome": "CRECHE SRA. SANTANA",
+    "endereco": "RUA MAJOR JOAQUIM FURTADO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0017": {
+    "local_nome": "EEF MAJOR JOAQUIM ANTONIO FURTADO",
+    "endereco": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0018": {
+    "local_nome": "CENTRO EDUCACIONAL DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA",
+    "observacao": ""
+  },
+  "0019": {
+    "local_nome": "CENTRO EDUCACIONAL DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA",
+    "observacao": ""
+  },
+  "0020": {
+    "local_nome": "CENTRO SOCIAL URBANO DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, S/N, SERRINHA",
+    "observacao": ""
+  },
+  "0021": {
+    "local_nome": "CRECHE ANA JÚLIA GOMES ALCÂNTARA",
+    "endereco": "TRIANGULO DA PALESTINA, PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0022": {
+    "local_nome": "CRECHE ANA JÚLIA GOMES ALCÂNTARA",
+    "endereco": "TRIANGULO DA PALESTINA, PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0023": {
+    "local_nome": "DEPARTAMENTO DE ORÇAMENTO PARTICIPATIVO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0156": {
+    "local_nome": "EEF OSSIAN ARARIPE",
+    "endereco": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0024": {
+    "local_nome": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA",
+    "endereco": "RUA PADRE MACEDO, S/N, CENTRO",
+    "observacao": ""
+  },
+  "0025": {
+    "local_nome": "EEM ADAUTO LEITE",
+    "endereco": "AV. SINVAL LACERDA, 416 CENTRO",
+    "observacao": ""
+  },
+  "0026": {
+    "local_nome": "EEM ADAUTO LEITE",
+    "endereco": "AV. SINVAL LACERDA, 416 CENTRO",
+    "observacao": ""
+  },
+  "0027": {
+    "local_nome": "EEM ADAUTO LEITE",
+    "endereco": "AV. SINVAL LACERDA, 416 CENTRO",
+    "observacao": ""
+  },
+  "0028": {
+    "local_nome": "EEM ANDRÉ CARTAXO",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N CENTRO",
+    "observacao": ""
+  },
+  "0029": {
+    "local_nome": "EEM ANDRÉ CARTAXO",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N CENTRO",
+    "observacao": ""
+  },
+  "0030": {
+    "local_nome": "EEM ANDRÉ CARTAXO",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N CENTRO",
+    "observacao": ""
+  },
+  "0031": {
+    "local_nome": "EEM ANDRÉ CARTAXO",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N CENTRO",
+    "observacao": ""
+  },
+  "0032": {
+    "local_nome": "EEF OSSIAN ARARIPE",
+    "endereco": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0033": {
+    "local_nome": "EEF OSSIAN ARARIPE",
+    "endereco": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO Locais de Votação - Seções E Aptos Página 1 de 5 Local Aptos Endereço",
+    "observacao": ""
+  },
+  "0034": {
+    "local_nome": "EEF OSSIAN ARARIPE",
+    "endereco": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0035": {
+    "local_nome": "EEF SÃO JOSÉ",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0053": {
+    "local_nome": "EEF JOSE ACÍLIO",
+    "endereco": "RUA GABRIEL IZIDRO, SN PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0036": {
+    "local_nome": "EEF SÃO JOSÉ",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0051": {
+    "local_nome": "DISTRITO DE SÃO FÉLIX - SAÍDA PARA OLHO D'ÁGUA SÃO FÉLIX-DISTRITO Locais de Votação - Seções E Aptos Página 3 de 5 Local Aptos Endereço",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0037": {
+    "local_nome": "EEF SÃO JOSÉ",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0038": {
+    "local_nome": "EEF SÃO JOSÉ",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0039": {
+    "local_nome": "EEIF FIRMINO ARARUNA DE SOUSA",
+    "endereco": "RUA ROSENDO MANOEL DE SOUSA, S/N ANAUA-DISTRITO",
+    "observacao": ""
+  },
+  "0040": {
+    "local_nome": "EEF FILEMON TELES",
+    "endereco": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0041": {
+    "local_nome": "EEF FILEMON TELES",
+    "endereco": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0042": {
+    "local_nome": "EEF WALTER DE CALDAS TELES",
+    "endereco": "RUA DA PAZ, S/N BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0043": {
+    "local_nome": "RUA JOÃO LUCAS, 103 BURITIZINHO-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0044": {
+    "local_nome": "SINDICATO DOS TRABALHADORES RURAIS DO DISTRITO DE BURITIZINHO",
+    "endereco": "RUA JOÃO LUCAS, 103 BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0045": {
+    "local_nome": "EEF WALTER DE CALDAS TELES",
+    "endereco": "RUA DA PAZ, S/N BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0046": {
+    "local_nome": "EEF EDSON OLEGÁRIO DE SANTANA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0047": {
+    "local_nome": "EEF EDSON OLEGÁRIO DE SANTANA",
+    "endereco": "RUA CEL. NAZÁRIO, S/N COITE-DISTRITO",
+    "observacao": ""
+  },
+  "0048": {
+    "local_nome": "EEF EDSON OLEGÁRIO DE SANTANA",
+    "endereco": "RUA CEL. NAZÁRIO, S/N COITE-DISTRITO",
+    "observacao": ""
+  },
+  "0049": {
+    "local_nome": "EEF EDSON OLEGÁRIO DE SANTANA",
+    "endereco": "RUA CEL. NAZÁRIO, S/N COITE-DISTRITO",
+    "observacao": ""
+  },
+  "0052": {
+    "local_nome": "DISTRITO DE SÃO FÉLIX - SAÍDA PARA OLHO D'ÁGUA SÃO FÉLIX-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0054": {
+    "local_nome": "EEIF CAREOLANO LEITE",
+    "endereco": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO",
+    "observacao": ""
+  },
+  "0055": {
+    "local_nome": "EEIF CAREOLANO LEITE",
+    "endereco": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO",
+    "observacao": ""
+  },
+  "0056": {
+    "local_nome": "EEIF CAREOLANO LEITE",
+    "endereco": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO",
+    "observacao": ""
+  },
+  "0057": {
+    "local_nome": "EEIF CAREOLANO LEITE",
+    "endereco": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO",
+    "observacao": ""
+  },
+  "0058": {
+    "local_nome": "EEF MAJOR JOAQUIM ANTONIO FURTADO",
+    "endereco": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0059": {
+    "local_nome": "EEF MAJOR JOAQUIM ANTONIO FURTADO",
+    "endereco": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0060": {
+    "local_nome": "UBS QUIXABINHA",
+    "endereco": "SITIO CANABRAVINHA PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0061": {
+    "local_nome": "UBS QUIXABINHA",
+    "endereco": "SITIO CANABRAVINHA PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0062": {
+    "local_nome": "EEF JOSE ACÍLIO",
+    "endereco": "RUA GABRIEL IZIDRO, SN PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0063": {
+    "local_nome": "CENTRO EDUCACIONAL DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA",
+    "observacao": ""
+  },
+  "0064": {
+    "local_nome": "CENTRO SOCIAL URBANO DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, S/N, SERRINHA",
+    "observacao": ""
+  },
+  "0065": {
+    "local_nome": "POSTO DE SAÚDE DR. OSCAR F. SOBRAL",
+    "endereco": "AV. BURITI GRANDE, S/N",
+    "observacao": ""
+  },
+  "0066": {
+    "local_nome": "EEF MAJOR JOAQUIM ANTONIO FURTADO",
+    "endereco": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0067": {
+    "local_nome": "CRECHE SRA. SANTANA",
+    "endereco": "RUA MAJOR JOAQUIM FURTADO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0068": {
+    "local_nome": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA",
+    "endereco": "RUA PADRE MACEDO, S/N, CENTRO",
+    "observacao": ""
+  },
+  "0069": {
+    "local_nome": "CÂMARA MUNICIPAL DE MAURITI",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0070": {
+    "local_nome": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA",
+    "endereco": "RUA PADRE MACEDO, S/N, CENTRO",
+    "observacao": ""
+  },
+  "0071": {
+    "local_nome": "CÂMARA MUNICIPAL DE MAURITI",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0154": {
+    "local_nome": "EEM ANDRÉ CARTAXO",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N CENTRO",
+    "observacao": ""
+  },
+  "0072": {
+    "local_nome": "EEM ANDRÉ CARTAXO",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N CENTRO",
+    "observacao": ""
+  },
+  "0073": {
+    "local_nome": "RUA DOS PEREIRAS, S/N,SAO MIGUEL-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0074": {
+    "local_nome": "RUA DOS PEREIRAS, S/N,SAO MIGUEL-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0075": {
+    "local_nome": "CÂMARA MUNICIPAL DE MAURITI",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N",
+    "observacao": ""
+  },
+  "0076": {
+    "local_nome": "SINDICATO DOS TRABALHADORES RURAIS DE MAURITI",
+    "endereco": "RUA JOSÉ QUINTINO, 55 CENTRO",
+    "observacao": ""
+  },
+  "0077": {
+    "local_nome": "CRECHE MAGIA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0165": {
+    "local_nome": "RUA MANOEL FELIPE, S/N - POVOADO DE SANTO ANTONIO DOS FELIPES, BURITIZINHO-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0078": {
+    "local_nome": "ASSOCIAÇÃO DOS AGRICULTORES DO SÍTIO ESTRELINHA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0079": {
+    "local_nome": "EEM ANDRÉ CARTAXO",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N CENTRO",
+    "observacao": ""
+  },
+  "0080": {
+    "local_nome": "EEIF FRANCISCO VICTOR DE MARIA",
+    "endereco": "SITIO CAJUEIRO DO COITE COITE-DISTRITO",
+    "observacao": ""
+  },
+  "0081": {
+    "local_nome": "EEF WALTER DE CALDAS TELES",
+    "endereco": "RUA DA PAZ, S/N BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0082": {
+    "local_nome": "EEIF JOÃO FURTADO MARANHÃO",
+    "endereco": "SITIO CURTUME SAO MIGUEL-DISTRITO",
+    "observacao": ""
+  },
+  "0083": {
+    "local_nome": "RUA JOSÉ QUINTINO, 55 CENTRO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0084": {
+    "local_nome": "EEF JOSÉ JOAQUIM DE SOUSA",
+    "endereco": "RUA DOMINGOS ALVES DE ANDRADE OLHO D'ÁGUA-DISTRITO",
+    "observacao": ""
+  },
+  "0085": {
+    "local_nome": "EEF JOAQUIM PIMENTA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0164": {
+    "local_nome": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA",
+    "endereco": "RUA 03, S/N BELA VISTA Locais de Votação - Seções E Aptos Página 5 de 5",
+    "observacao": ""
+  },
+  "0086": {
+    "local_nome": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA",
+    "endereco": "RUA 03, S/N BELA VISTA",
+    "observacao": ""
+  },
+  "0087": {
+    "local_nome": "EEF JOSÉ JOAQUIM DE SOUSA",
+    "endereco": "RUA DOMINGOS ALVES DE ANDRADE OLHO D'ÁGUA-DISTRITO",
+    "observacao": ""
+  },
+  "0088": {
+    "local_nome": "EEIF ZEFINHA CARTAXO",
+    "endereco": "SITIO DANTAS DANTAS",
+    "observacao": ""
+  },
+  "0089": {
+    "local_nome": "EEF JOÃO LEITE DA SILVA",
+    "endereco": "SITIO MACAMBIRA BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0090": {
+    "local_nome": "EEIF JARBAS PASSARINHO",
+    "endereco": "SITIO SANTO ANTONIO DOS POSSEIROS ANAUA-DISTRITO",
+    "observacao": ""
+  },
+  "0091": {
+    "local_nome": "EEM ANDRÉ CARTAXO",
+    "endereco": "RUA CHAGAS SAMPAIO, S/N CENTRO",
+    "observacao": ""
+  },
+  "0092": {
+    "local_nome": "CRECHE ARCO-IRIS",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0093": {
+    "local_nome": "EEF JOSE ACÍLIO",
+    "endereco": "RUA GABRIEL IZIDRO, SN PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0094": {
+    "local_nome": "SITIO LAGOA SECA SITIO LAGOA SECA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0095": {
+    "local_nome": "SITIO PANASCO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0096": {
+    "local_nome": "EEF FILEMON TELES",
+    "endereco": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0097": {
+    "local_nome": "CENTRO VOCACIONAL TECNOLÓGICO",
+    "endereco": "AV. SINVAL LACERDA, S/N, CENTRO",
+    "observacao": ""
+  },
+  "0098": {
+    "local_nome": "CENTRO VOCACIONAL TECNOLÓGICO",
+    "endereco": "AV. SINVAL LACERDA, S/N, CENTRO",
+    "observacao": ""
+  },
+  "0099": {
+    "local_nome": "EEIF CAREOLANO LEITE",
+    "endereco": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO",
+    "observacao": ""
+  },
+  "0100": {
+    "local_nome": "SITIO VARZEA GRANDE PALESTINA DO CARIRI-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0101": {
+    "local_nome": "EEIF HUMBERTO BEZERRA",
+    "endereco": "RUA JOSE LEITE DA COSTA, S/N CENTRO",
+    "observacao": ""
+  },
+  "0102": {
+    "local_nome": "EEF SÃO JOSÉ",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0103": {
+    "local_nome": "EEF FILEMON TELES",
+    "endereco": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0104": {
+    "local_nome": "CENTRO EDUCACIONAL DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA",
+    "observacao": ""
+  },
+  "0105": {
+    "local_nome": "CENTRO EDUCACIONAL DE MAURITI",
+    "endereco": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA",
+    "observacao": ""
+  },
+  "0106": {
+    "local_nome": "EEF SÃO JOSÉ",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0107": {
+    "local_nome": "CRECHE ARCO-IRIS",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0108": {
+    "local_nome": "CAPELA SÃO FRANCISCO",
+    "endereco": "RUA AMELIO LEITE, 388, POPULARES",
+    "observacao": ""
+  },
+  "0110": {
+    "local_nome": "EEF LUIZ FELIPE",
+    "endereco": "SITIO SERRA BRAVA SÃO FÉLIX-DISTRITO",
+    "observacao": ""
+  },
+  "0111": {
+    "local_nome": "SITIO LUCIANO FUNCIONARÁ NA EEF ANTONIO FURTADO DE OLIVEIRA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0112": {
+    "local_nome": "POSTO DE SAÚDE DO SÍTIO VÁRZEA GRANDE",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0113": {
+    "local_nome": "ASSOCIAÇÃO COMUNITÁRIA DO SÍTIO GIQUI",
+    "endereco": "SITIO GIQUI, PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0114": {
+    "local_nome": "EEF JOÃO BATISTA MONTENEGRO",
+    "endereco": "SÍTIO MACELA COITE-DISTRITO",
+    "observacao": ""
+  },
+  "0115": {
+    "local_nome": "EEF JOSÉ LOPES DINIZ",
+    "endereco": "SITIO OLHO D'ÁGUA COITE-DISTRITO",
+    "observacao": ""
+  },
+  "0116": {
+    "local_nome": "EEF JOSE WILSON BARBOSA DE OLIVEIRA",
+    "endereco": "SITIO PITOMBEIRAS SEDE",
+    "observacao": ""
+  },
+  "0118": {
+    "local_nome": "SITIO LOBO NOVA SANTA CRUZ-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0119": {
+    "local_nome": "EEF LUIZ FLORENTINO DOS SANTOS",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0162": {
+    "local_nome": "CRECHE MUNDO ENCANTADO",
+    "endereco": "AV. DR. FERNANDO TELES CARTAXO, S/N, BELA VISTA",
+    "observacao": ""
+  },
+  "0120": {
+    "local_nome": "CRECHE MAGIA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0121": {
+    "local_nome": "GRUPO ESCOLAR DO SÍTIO AÇUDE VELHO",
+    "endereco": "SITIO AÇUDE VELHO UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0122": {
+    "local_nome": "EEF ANTONIO GOMES",
+    "endereco": "SITIO NOVO PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0123": {
+    "local_nome": "EEF ANTONIO FURTADO DE OLIVEIRA",
+    "endereco": "SITIO FURTUNA SEDE",
+    "observacao": ""
+  },
+  "0124": {
+    "local_nome": "ASSOCIAÇÃO COMUNITÁRIA DOS PRODUTORES RURAIS DO SÍTIO VOLTA",
+    "endereco": "SITIO VOLTA",
+    "observacao": ""
+  },
+  "0125": {
+    "local_nome": "EEIF FRANCISCO BARBOSA DOS SANTOS",
+    "endereco": "SITIO TRINCHEIRAS SEDE",
+    "observacao": ""
+  },
+  "0126": {
+    "local_nome": "EEF ANTONIO LEITE",
+    "endereco": "SITIO GOMES PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0127": {
+    "local_nome": "EEF SÃO JOSÉ",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0050": {
+    "local_nome": "DISTRITO DE SÃO FÉLIX - SAÍDA PARA OLHO D'ÁGUA SÃO FÉLIX-DISTRITO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0128": {
+    "local_nome": "EEF SÃO JOSÉ",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0130": {
+    "local_nome": "EEF JOSÉ JOAQUIM DE SOUSA",
+    "endereco": "RUA DOMINGOS ALVES DE ANDRADE OLHO D'ÁGUA-DISTRITO",
+    "observacao": ""
+  },
+  "0131": {
+    "local_nome": "EEF JOSÉ JOAQUIM DE SOUSA",
+    "endereco": "RUA DOMINGOS ALVES DE ANDRADE OLHO D'ÁGUA-DISTRITO",
+    "observacao": ""
+  },
+  "0132": {
+    "local_nome": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA",
+    "endereco": "RUA 03, S/N BELA VISTA",
+    "observacao": ""
+  },
+  "0133": {
+    "local_nome": "CENTRO EDUCACIONAL AGROVILA",
+    "endereco": "CONJUNTO AGROVILA, COITÉ-DISTRITO",
+    "observacao": ""
+  },
+  "0134": {
+    "local_nome": "ESCOLA REUNIDA DA LAGOA SECA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0135": {
+    "local_nome": "EEIF JOÃO FURTADO MARANHÃO",
+    "endereco": "SITIO CURTUME SAO MIGUEL-DISTRITO",
+    "observacao": ""
+  },
+  "0136": {
+    "local_nome": "EEIF ZEFINHA CARTAXO",
+    "endereco": "SITIO DANTAS DANTAS",
+    "observacao": ""
+  },
+  "0137": {
+    "local_nome": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA",
+    "endereco": "RUA 03, S/N BELA VISTA",
+    "observacao": ""
+  },
+  "0138": {
+    "local_nome": "EEF ANTONIO LEITE DE ARAÚJO",
+    "endereco": "SITIO CIPÓ PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0139": {
+    "local_nome": "CRECHE MUNDO ENCANTADO",
+    "endereco": "AV. DR. FERNANDO TELES CARTAXO, S/N, BELA VISTA",
+    "observacao": ""
+  },
+  "0140": {
+    "local_nome": "EEIF BOM JESUS",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0141": {
+    "local_nome": "EEIF FIRMINO ARARUNA DE SOUSA",
+    "endereco": "RUA ROSENDO MANOEL DE SOUSA, S/N ANAUA-DISTRITO",
+    "observacao": ""
+  },
+  "0143": {
+    "local_nome": "EEF MAJOR JOAQUIM ANTONIO FURTADO",
+    "endereco": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0144": {
+    "local_nome": "EEIF MARIA DO SOCORRO SEVERINO OLIVEIRA",
+    "endereco": "SITIO EXTREMA COITE-DISTRITO FUNCIONARÁ CENTRO VOCACIONAL TECNOLÓGICO Locais de Votação - Seções E Aptos Página 4 de 5 Local Aptos Endereço",
+    "observacao": ""
+  },
+  "0145": {
+    "local_nome": "EEIF JARBAS PASSARINHO",
+    "endereco": "SITIO SANTO ANTONIO DOS POSSEIROS ANAUA-DISTRITO",
+    "observacao": ""
+  },
+  "0146": {
+    "local_nome": "CAPELA MÃE RAINHA",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0147": {
+    "local_nome": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA",
+    "endereco": "RUA 03, S/N BELA VISTA",
+    "observacao": ""
+  },
+  "0148": {
+    "local_nome": "EEF ANTONIO FURTADO DE OLIVEIRA",
+    "endereco": "SITIO FURTUNA SEDE",
+    "observacao": ""
+  },
+  "0149": {
+    "local_nome": "EEF JOÃO LEITE DA SILVA",
+    "endereco": "SITIO MACAMBIRA BURITIZINHO-DISTRITO",
+    "observacao": ""
+  },
+  "0150": {
+    "local_nome": "CENTRO EDUCACIONAL AGROVILA",
+    "endereco": "CONJUNTO AGROVILA, COITÉ-DISTRITO",
+    "observacao": ""
+  },
+  "0151": {
+    "local_nome": "CRECHE MUNDO ENCANTADO",
+    "endereco": "AV. DR. FERNANDO TELES CARTAXO, S/N, BELA VISTA",
+    "observacao": ""
+  },
+  "0153": {
+    "local_nome": "EEF JOÃO BATISTA MONTENEGRO",
+    "endereco": "SÍTIO MACELA COITE-DISTRITO",
+    "observacao": ""
+  },
+  "0155": {
+    "local_nome": "EEF MAJOR JOAQUIM ANTONIO FURTADO",
+    "endereco": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO",
+    "observacao": ""
+  },
+  "0157": {
+    "local_nome": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA",
+    "endereco": "RUA 03, S/N BELA VISTA",
+    "observacao": ""
+  },
+  "0158": {
+    "local_nome": "EEIF ZEFINHA CARTAXO",
+    "endereco": "SITIO DANTAS DANTAS",
+    "observacao": ""
+  },
+  "0159": {
+    "local_nome": "SINDICATO DOS TRABALHADORES RURAIS DE MAURITI",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0160": {
+    "local_nome": "SINDICATO DOS TRABALHADORES RURAIS DO DISTRITO DE BURITIZINHO",
+    "endereco": "",
+    "observacao": ""
+  },
+  "0161": {
+    "local_nome": "CRECHE ANA JÚLIA GOMES ALCÂNTARA",
+    "endereco": "TRIANGULO DA PALESTINA, PALESTINA DO CARIRI-DISTRITO",
+    "observacao": ""
+  },
+  "0163": {
+    "local_nome": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA",
+    "endereco": "RUA 03, S/N BELA VISTA",
+    "observacao": ""
+  }
+}

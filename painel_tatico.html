@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Tático Eleitoral - Mauriti/CE | Plano Virada Lula 2026</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #090D16;
+            --bg-card: #111726;
+            --bg-card-hover: #182032;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(16, 185, 129, 0.3);
+            
+            --lula-red: #E11D48;
+            --lula-green: #10B981;
+            --flavio-blue: #3B82F6;
+            --opp-amber: #F59E0B;
+            --opp-purple: #8B5CF6;
+            
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --text-dim: #6B7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 60px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(225, 29, 72, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+        }
+
+        .font-space {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Header Layout */
+        header {
+            background: rgba(17, 23, 38, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 16px 28px;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .badge-live {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10B981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-live::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: #10B981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10B981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 28px auto;
+            padding: 0 24px;
+        }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .kpi-card.lula::after { background: #10B981; }
+        .kpi-card.opositores::after { background: #EF4444; }
+        .kpi-card.abstencao::after { background: #F59E0B; }
+        .kpi-card.total::after { background: #3B82F6; }
+
+        .kpi-title {
+            font-size: 0.825rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #FFF;
+            line-height: 1.2;
+        }
+
+        .kpi-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* District Analysis Grid */
+        .district-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .district-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .district-card:hover, .district-card.active {
+            border-color: #10B981;
+            background: var(--bg-card-hover);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .district-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #FFF;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .district-meta {
+            font-size: 0.775rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        /* Controls & Filters */
+        .controls-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1 1 280px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 16px 10px 42px;
+            color: #FFF;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: #10B981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            width: 18px;
+            height: 18px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.825rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10B981;
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        /* HIGH-VISIBILITY DARK MODE SELECTS & OPTIONS */
+        select, .select-sort {
+            background-color: #182032 !important;
+            color: #F3F4F6 !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            padding: 10px 36px 10px 16px !important;
+            border-radius: 10px !important;
+            font-size: 0.875rem !important;
+            font-weight: 600 !important;
+            font-family: inherit !important;
+            outline: none !important;
+            cursor: pointer !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310B981' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 12px center !important;
+            background-size: 16px !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        select:hover, .select-sort:hover, select:focus, .select-sort:focus {
+            border-color: #10B981 !important;
+            background-color: #1E293B !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+        }
+
+        select option, .select-sort option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+            padding: 12px !important;
+            font-weight: 500 !important;
+        }
+
+        /* View Tabs */
+        .view-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.825rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--bg-card-hover);
+            color: #FFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Grid View */
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .sec-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .sec-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px -6px rgba(0,0,0,0.5);
+        }
+
+        .sec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .sec-number {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #FFF;
+        }
+
+        .sec-local {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #FFF;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        .sec-address {
+            font-size: 0.775rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-status {
+            font-size: 0.725rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .status-virada {
+            background: rgba(239, 68, 68, 0.15);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-risco {
+            background: rgba(245, 158, 11, 0.15);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-dominado {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60A5FA;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .status-bastiao {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Vote Bar */
+        .vote-bar-container {
+            margin: 14px 0;
+        }
+
+        .vote-bar-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .vote-bar {
+            height: 10px;
+            background: #1F2937;
+            border-radius: 9999px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .bar-lula {
+            background: linear-gradient(90deg, #10B981, #059669);
+            height: 100%;
+        }
+
+        .bar-opp {
+            background: linear-gradient(90deg, #EF4444, #DC2626);
+            height: 100%;
+        }
+
+        .sec-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .stat-item-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .stat-item-val {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #FFF;
+            margin-top: 2px;
+        }
+
+        /* Table View */
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow-x: auto;
+            margin-bottom: 32px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Tactical Intelligence Section */
+        .intel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .intel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .intel-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFF;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ranking-list {
+            list-style: none;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFF;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .rank-badge.top1 { background: #F59E0B; color: #000; }
+        .rank-badge.top2 { background: #94A3B8; color: #000; }
+        .rank-badge.top3 { background: #B45309; color: #FFF; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            max-width: 650px;
+            width: 100%;
+            padding: 28px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #FFF;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: #FFF;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-export:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="background: rgba(225, 29, 72, 0.2); border: 1px solid rgba(225, 29, 72, 0.4); padding: 10px; border-radius: 12px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E11D48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h1 class="font-space" style="font-size: 1.25rem; font-weight: 700; color: #FFF;">PAINEL TÁTICO ELEITORAL</h1>
+                        <span class="badge-live">MAURITI / CE (ZN 0076)</span>
+                    </div>
+                    <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 2px;">
+                        Mapeamento Oficial de Locais de Votação, Endereços e Bairros / Distritos
+                    </p>
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="btn-export" onclick="exportCSV()">
+                    📥 Exportar Relatório CSV Completo
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- KPI OVERVIEW -->
+        <section class="kpi-grid">
+            <div class="kpi-card lula">
+                <div class="kpi-title">Votação Total Lula (13)</div>
+                <div class="kpi-value font-space" style="color: #10B981;">20.987</div>
+                <div class="kpi-sub">
+                    <strong style="color: #10B981; font-size: 1rem;">72,58%</strong> dos votos válidos
+                </div>
+            </div>
+
+            <div class="kpi-card opositores">
+                <div class="kpi-title">Votação Total Oposição</div>
+                <div class="kpi-value font-space" style="color: #EF4444;">7.930</div>
+                <div class="kpi-sub">
+                    <strong style="color: #EF4444; font-size: 1rem;">27,42%</strong> (Flávio: 7.084 / Outros: 846)
+                </div>
+            </div>
+
+            <div class="kpi-card abstencao">
+                <div class="kpi-title">Abstenção / Faltosos</div>
+                <div class="kpi-value font-space" style="color: #F59E0B;">6.174</div>
+                <div class="kpi-sub">
+                    <strong style="color: #F59E0B; font-size: 1rem;">16,89%</strong> dos 36.549 aptos
+                </div>
+            </div>
+
+            <div class="kpi-card total">
+                <div class="kpi-title">Total de Seções Ativas</div>
+                <div class="kpi-value font-space" style="color: #3B82F6;">140</div>
+                <div class="kpi-sub">
+                    <span>14 Distritos / Bairros Mapeados</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- DISTRICT ANALYSIS SECTION -->
+        <section style="margin-bottom: 32px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 class="font-space" style="color: #FFF; font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                    📍 Diagnóstico por Distrito / Bairro (Mauriti)
+                </h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Clique em um distrito para filtrar as seções</span>
+            </div>
+            <div class="district-grid" id="district-cards-container">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- TACTICAL INTELLIGENCE / SUMMARY REPORT -->
+        <section class="intel-grid">
+            <div class="intel-card">
+                <div class="intel-title">
+                    <span style="color: #EF4444;">🎯 Top Seções Alvo de Virada (Maior Oposição)</span>
+                </div>
+                <ul class="ranking-list" id="list-opp-top">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+
+            <div class="intel-card">
+                <div class="intel-title">
+                    <span style="color: #F59E0B;">⚡ Top Seções de Alta Abstenção (Reservatório)</span>
+                </div>
+                <ul class="ranking-list" id="list-abst-top">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- CONTROLS & FILTERS -->
+        <section class="controls-card">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="search-input" class="search-input" placeholder="Buscar por nº da seção, escola ou endereço..." oninput="filterData()">
+            </div>
+
+            <div class="filter-group">
+                <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all', this)">Todas (140)</button>
+                <button class="filter-btn" id="btn-filter-virada" onclick="setFilter('virada', this)">🎯 Alvos de Virada (&lt;65%)</button>
+                <button class="filter-btn" id="btn-filter-abstencao" onclick="setFilter('abstencao', this)">⚡ Alta Abstenção (&gt;20%)</button>
+                <button class="filter-btn" id="btn-filter-bastiao" onclick="setFilter('bastiao', this)">🏰 Fortalezas (&gt;75%)</button>
+            </div>
+
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <select id="district-select" class="select-sort" onchange="filterData()">
+                    <option value="all">Filtro: Todos os Distritos/Bairros</option>
+                </select>
+
+                <select id="sort-select" class="select-sort" onchange="filterData()">
+                    <option value="lula_asc">Ordenação: % Lula (Menor primeiro)</option>
+                    <option value="lula_desc">Ordenação: % Lula (Maior primeiro)</option>
+                    <option value="opp_desc">Ordenação: Votos Oposição (Maior)</option>
+                    <option value="abst_desc">Ordenação: Faltosos (Maior)</option>
+                    <option value="sec_asc">Ordenação: Nº Seção (0001 → 0164)</option>
+                </select>
+
+                <div class="view-tabs">
+                    <button class="tab-btn active" id="tab-grid" onclick="setView('grid')">Grid Cards</button>
+                    <button class="tab-btn" id="tab-table" onclick="setView('table')">Tabela</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTIONS CONTAINER -->
+        <div id="view-grid-container" class="sections-grid">
+            <!-- Dynamic Grid Cards -->
+        </div>
+
+        <div id="view-table-container" class="table-card" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Seção</th>
+                        <th>Local de Votação / Escola</th>
+                        <th>Bairro / Distrito</th>
+                        <th>Endereço</th>
+                        <th>Aptos</th>
+                        <th>Faltosos</th>
+                        <th>Lula (13)</th>
+                        <th>Flávio (22)</th>
+                        <th>% Lula</th>
+                        <th>Status Tático</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Dynamic Table Rows -->
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <!-- MODAL DETAIL -->
+    <div class="modal-overlay" id="detail-modal">
+        <div class="modal-card" id="modal-content">
+            <!-- Modal Body -->
+        </div>
+    </div>
+
+    <script>
+        const rawSections = [{"secao": "0001", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1015", "aptos": 189, "comparecimento": 147, "faltosos": 42, "pct_abstencao": 22.22, "votos_nominais": 131, "votos_branco": 1, "votos_nulo": 15, "total_apurado": 147, "votos_validos": 138, "candidatos": {"13_LULA": 90, "22_FLAVIO_BOLSONARO": 44, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 90, "opositores_votos": 48, "pct_lula": 65.22, "pct_opositores": 34.78, "margem_lula": 42, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA", "endereco_oficial": "RUA PADRE MACEDO, S/N, CENTRO", "distrito": "Centro"}, {"secao": "0002", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1015", "aptos": 195, "comparecimento": 161, "faltosos": 34, "pct_abstencao": 17.44, "votos_nominais": 156, "votos_branco": 0, "votos_nulo": 5, "total_apurado": 161, "votos_validos": 158, "candidatos": {"13_LULA": 103, "22_FLAVIO_BOLSONARO": 52, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 0}, "lula_votos": 103, "opositores_votos": 55, "pct_lula": 65.19, "pct_opositores": 34.81, "margem_lula": 48, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA", "endereco_oficial": "RUA PADRE MACEDO, S/N, CENTRO", "distrito": "Centro"}, {"secao": "0003", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1112", "aptos": 221, "comparecimento": 186, "faltosos": 35, "pct_abstencao": 15.84, "votos_nominais": 171, "votos_branco": 6, "votos_nulo": 9, "total_apurado": 186, "votos_validos": 173, "candidatos": {"13_LULA": 105, "22_FLAVIO_BOLSONARO": 61, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 105, "opositores_votos": 68, "pct_lula": 60.69, "pct_opositores": 39.31, "margem_lula": 37, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO EDUCACIONAL DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0004", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1112", "aptos": 220, "comparecimento": 179, "faltosos": 41, "pct_abstencao": 18.64, "votos_nominais": 163, "votos_branco": 4, "votos_nulo": 12, "total_apurado": 179, "votos_validos": 168, "candidatos": {"13_LULA": 119, "22_FLAVIO_BOLSONARO": 44, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 119, "opositores_votos": 49, "pct_lula": 70.83, "pct_opositores": 29.17, "margem_lula": 70, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CENTRO EDUCACIONAL DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0005", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1112", "aptos": 221, "comparecimento": 178, "faltosos": 43, "pct_abstencao": 19.46, "votos_nominais": 164, "votos_branco": 6, "votos_nulo": 8, "total_apurado": 178, "votos_validos": 172, "candidatos": {"13_LULA": 104, "22_FLAVIO_BOLSONARO": 55, "14_RENAN_SANTOS": 8, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 3}, "lula_votos": 104, "opositores_votos": 68, "pct_lula": 60.47, "pct_opositores": 39.53, "margem_lula": 36, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO EDUCACIONAL DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0006", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1244", "aptos": 331, "comparecimento": 251, "faltosos": 80, "pct_abstencao": 24.17, "votos_nominais": 230, "votos_branco": 4, "votos_nulo": 17, "total_apurado": 251, "votos_validos": 242, "candidatos": {"13_LULA": 192, "22_FLAVIO_BOLSONARO": 48, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 192, "opositores_votos": 50, "pct_lula": 79.34, "pct_opositores": 20.66, "margem_lula": 142, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF FIRMINO ARARUNA DE SOUSA", "endereco_oficial": "RUA ROSENDO MANOEL DE SOUSA, S/N ANAUA-DISTRITO", "distrito": "Distrito de Anauá"}, {"secao": "0007", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1252", "aptos": 295, "comparecimento": 236, "faltosos": 59, "pct_abstencao": 20.0, "votos_nominais": 224, "votos_branco": 2, "votos_nulo": 10, "total_apurado": 236, "votos_validos": 227, "candidatos": {"13_LULA": 162, "22_FLAVIO_BOLSONARO": 54, "14_RENAN_SANTOS": 6, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 4}, "lula_votos": 162, "opositores_votos": 65, "pct_lula": 71.37, "pct_opositores": 28.63, "margem_lula": 97, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF FILEMON TELES", "endereco_oficial": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0008", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1058", "aptos": 140, "comparecimento": 117, "faltosos": 23, "pct_abstencao": 16.43, "votos_nominais": 112, "votos_branco": 1, "votos_nulo": 4, "total_apurado": 117, "votos_validos": 112, "candidatos": {"13_LULA": 94, "22_FLAVIO_BOLSONARO": 16, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 0}, "lula_votos": 94, "opositores_votos": 18, "pct_lula": 83.93, "pct_opositores": 16.07, "margem_lula": 76, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "POSTO DE SAÚDE DR. JOSÉ LEITE MARANHÃO", "endereco_oficial": "RUA PROJETADA, S/N COITE-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0009", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1376", "aptos": 152, "comparecimento": 131, "faltosos": 21, "pct_abstencao": 13.82, "votos_nominais": 129, "votos_branco": 1, "votos_nulo": 1, "total_apurado": 131, "votos_validos": 129, "candidatos": {"13_LULA": 100, "22_FLAVIO_BOLSONARO": 25, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 100, "opositores_votos": 29, "pct_lula": 77.52, "pct_opositores": 22.48, "margem_lula": 71, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE ARARINHA", "endereco_oficial": "RUA CEL. NAZÁRIO, S/N, COITÉ-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0011", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1708", "aptos": 339, "comparecimento": 267, "faltosos": 72, "pct_abstencao": 21.24, "votos_nominais": 237, "votos_branco": 2, "votos_nulo": 28, "total_apurado": 267, "votos_validos": 254, "candidatos": {"13_LULA": 215, "22_FLAVIO_BOLSONARO": 38, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 215, "opositores_votos": 39, "pct_lula": 84.65, "pct_opositores": 15.35, "margem_lula": 176, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF PEDRO MARANHÃO DE LACERDA", "endereco_oficial": "RUA CENTRAL S/N NOVA SANTA CRUZ-DISTRITO", "distrito": "Distrito de Nova Santa Cruz"}, {"secao": "0012", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1295", "aptos": 238, "comparecimento": 202, "faltosos": 36, "pct_abstencao": 15.13, "votos_nominais": 184, "votos_branco": 4, "votos_nulo": 14, "total_apurado": 202, "votos_validos": 192, "candidatos": {"13_LULA": 136, "22_FLAVIO_BOLSONARO": 48, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 5}, "lula_votos": 136, "opositores_votos": 56, "pct_lula": 70.83, "pct_opositores": 29.17, "margem_lula": 80, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE SONHO INFANTIL", "endereco_oficial": "RUA RAIMUNDO ALVES FERNANDES, S/N, SÃO FÉLIX-DISTRITO", "distrito": "Distrito de São Félix"}, {"secao": "0013", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1201", "aptos": 290, "comparecimento": 229, "faltosos": 61, "pct_abstencao": 21.03, "votos_nominais": 219, "votos_branco": 2, "votos_nulo": 8, "total_apurado": 229, "votos_validos": 224, "candidatos": {"13_LULA": 157, "22_FLAVIO_BOLSONARO": 60, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 3}, "lula_votos": 157, "opositores_votos": 67, "pct_lula": 70.09, "pct_opositores": 29.91, "margem_lula": 90, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF OSSIAN ARARIPE", "endereco_oficial": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0014", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1201", "aptos": 291, "comparecimento": 235, "faltosos": 56, "pct_abstencao": 19.24, "votos_nominais": 216, "votos_branco": 5, "votos_nulo": 14, "total_apurado": 235, "votos_validos": 220, "candidatos": {"13_LULA": 164, "22_FLAVIO_BOLSONARO": 52, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 164, "opositores_votos": 56, "pct_lula": 74.55, "pct_opositores": 25.45, "margem_lula": 108, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF OSSIAN ARARIPE", "endereco_oficial": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0015", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1090", "aptos": 263, "comparecimento": 211, "faltosos": 52, "pct_abstencao": 19.77, "votos_nominais": 176, "votos_branco": 7, "votos_nulo": 28, "total_apurado": 211, "votos_validos": 181, "candidatos": {"13_LULA": 134, "22_FLAVIO_BOLSONARO": 38, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 3, "70_AUGUSTO_CURY": 4}, "lula_votos": 134, "opositores_votos": 47, "pct_lula": 74.03, "pct_opositores": 25.97, "margem_lula": 87, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE ARCO-IRIS", "endereco_oficial": "RUA DOS PEREIRAS, S/N,SAO MIGUEL-DISTRITO", "distrito": "Distrito de São Miguel"}, {"secao": "0016", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1384", "aptos": 271, "comparecimento": 237, "faltosos": 34, "pct_abstencao": 12.55, "votos_nominais": 210, "votos_branco": 6, "votos_nulo": 21, "total_apurado": 237, "votos_validos": 220, "candidatos": {"13_LULA": 173, "22_FLAVIO_BOLSONARO": 41, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 5}, "lula_votos": 173, "opositores_votos": 47, "pct_lula": 78.64, "pct_opositores": 21.36, "margem_lula": 126, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE SRA. SANTANA", "endereco_oficial": "RUA MAJOR JOAQUIM FURTADO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0017", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1333", "aptos": 301, "comparecimento": 255, "faltosos": 46, "pct_abstencao": 15.28, "votos_nominais": 235, "votos_branco": 4, "votos_nulo": 16, "total_apurado": 255, "votos_validos": 241, "candidatos": {"13_LULA": 192, "22_FLAVIO_BOLSONARO": 46, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 192, "opositores_votos": 49, "pct_lula": 79.67, "pct_opositores": 20.33, "margem_lula": 143, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF MAJOR JOAQUIM ANTONIO FURTADO", "endereco_oficial": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0018", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1112", "aptos": 219, "comparecimento": 183, "faltosos": 36, "pct_abstencao": 16.44, "votos_nominais": 153, "votos_branco": 7, "votos_nulo": 23, "total_apurado": 183, "votos_validos": 167, "candidatos": {"13_LULA": 101, "22_FLAVIO_BOLSONARO": 60, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 101, "opositores_votos": 66, "pct_lula": 60.48, "pct_opositores": 39.52, "margem_lula": 35, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO EDUCACIONAL DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0019", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1112", "aptos": 219, "comparecimento": 182, "faltosos": 37, "pct_abstencao": 16.89, "votos_nominais": 165, "votos_branco": 2, "votos_nulo": 15, "total_apurado": 182, "votos_validos": 176, "candidatos": {"13_LULA": 115, "22_FLAVIO_BOLSONARO": 54, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 3}, "lula_votos": 115, "opositores_votos": 61, "pct_lula": 65.34, "pct_opositores": 34.66, "margem_lula": 54, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO EDUCACIONAL DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0020", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1120", "aptos": 366, "comparecimento": 298, "faltosos": 68, "pct_abstencao": 18.58, "votos_nominais": 262, "votos_branco": 5, "votos_nulo": 31, "total_apurado": 298, "votos_validos": 273, "candidatos": {"13_LULA": 162, "22_FLAVIO_BOLSONARO": 101, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 4}, "lula_votos": 162, "opositores_votos": 111, "pct_lula": 59.34, "pct_opositores": 40.66, "margem_lula": 51, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO SOCIAL URBANO DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, S/N, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0021", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1139", "aptos": 251, "comparecimento": 200, "faltosos": 51, "pct_abstencao": 20.32, "votos_nominais": 178, "votos_branco": 4, "votos_nulo": 18, "total_apurado": 200, "votos_validos": 185, "candidatos": {"13_LULA": 148, "22_FLAVIO_BOLSONARO": 32, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 148, "opositores_votos": 37, "pct_lula": 80.0, "pct_opositores": 20.0, "margem_lula": 111, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE ANA JÚLIA GOMES ALCÂNTARA", "endereco_oficial": "TRIANGULO DA PALESTINA, PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0022", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1139", "aptos": 255, "comparecimento": 198, "faltosos": 57, "pct_abstencao": 22.35, "votos_nominais": 184, "votos_branco": 3, "votos_nulo": 11, "total_apurado": 198, "votos_validos": 189, "candidatos": {"13_LULA": 136, "22_FLAVIO_BOLSONARO": 51, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 136, "opositores_votos": 53, "pct_lula": 71.96, "pct_opositores": 28.04, "margem_lula": 83, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE ANA JÚLIA GOMES ALCÂNTARA", "endereco_oficial": "TRIANGULO DA PALESTINA, PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0023", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1147", "aptos": 156, "comparecimento": 131, "faltosos": 25, "pct_abstencao": 16.03, "votos_nominais": 121, "votos_branco": 2, "votos_nulo": 8, "total_apurado": 131, "votos_validos": 126, "candidatos": {"13_LULA": 68, "22_FLAVIO_BOLSONARO": 50, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 68, "opositores_votos": 58, "pct_lula": 53.97, "pct_opositores": 46.03, "margem_lula": 10, "status_tatico": "Competitivo / Risco (45-55%)", "prioridade_tatica": "Alta Prioridade", "local_oficial": "DEPARTAMENTO DE ORÇAMENTO PARTICIPATIVO", "endereco_oficial": "RUA CHAGAS SAMPAIO, 11 CENTRO", "distrito": "Centro"}, {"secao": "0024", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1015", "aptos": 190, "comparecimento": 166, "faltosos": 24, "pct_abstencao": 12.63, "votos_nominais": 155, "votos_branco": 3, "votos_nulo": 8, "total_apurado": 166, "votos_validos": 155, "candidatos": {"13_LULA": 105, "22_FLAVIO_BOLSONARO": 46, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 0}, "lula_votos": 105, "opositores_votos": 50, "pct_lula": 67.74, "pct_opositores": 32.26, "margem_lula": 55, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA", "endereco_oficial": "RUA PADRE MACEDO, S/N, CENTRO", "distrito": "Centro"}, {"secao": "0025", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1155", "aptos": 327, "comparecimento": 267, "faltosos": 60, "pct_abstencao": 18.35, "votos_nominais": 248, "votos_branco": 5, "votos_nulo": 14, "total_apurado": 267, "votos_validos": 256, "candidatos": {"13_LULA": 180, "22_FLAVIO_BOLSONARO": 66, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 3}, "lula_votos": 180, "opositores_votos": 76, "pct_lula": 70.31, "pct_opositores": 29.69, "margem_lula": 104, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEM ADAUTO LEITE", "endereco_oficial": "AV. SINVAL LACERDA, 416 CENTRO", "distrito": "Centro"}, {"secao": "0026", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1155", "aptos": 329, "comparecimento": 291, "faltosos": 38, "pct_abstencao": 11.55, "votos_nominais": 272, "votos_branco": 3, "votos_nulo": 16, "total_apurado": 291, "votos_validos": 276, "candidatos": {"13_LULA": 188, "22_FLAVIO_BOLSONARO": 84, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 188, "opositores_votos": 88, "pct_lula": 68.12, "pct_opositores": 31.88, "margem_lula": 100, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ADAUTO LEITE", "endereco_oficial": "AV. SINVAL LACERDA, 416 CENTRO", "distrito": "Centro"}, {"secao": "0027", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1155", "aptos": 323, "comparecimento": 272, "faltosos": 51, "pct_abstencao": 15.79, "votos_nominais": 256, "votos_branco": 3, "votos_nulo": 13, "total_apurado": 272, "votos_validos": 257, "candidatos": {"13_LULA": 186, "22_FLAVIO_BOLSONARO": 66, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 186, "opositores_votos": 71, "pct_lula": 72.37, "pct_opositores": 27.63, "margem_lula": 115, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEM ADAUTO LEITE", "endereco_oficial": "AV. SINVAL LACERDA, 416 CENTRO", "distrito": "Centro"}, {"secao": "0028", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 269, "comparecimento": 233, "faltosos": 36, "pct_abstencao": 13.38, "votos_nominais": 222, "votos_branco": 4, "votos_nulo": 7, "total_apurado": 233, "votos_validos": 224, "candidatos": {"13_LULA": 145, "22_FLAVIO_BOLSONARO": 74, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 145, "opositores_votos": 79, "pct_lula": 64.73, "pct_opositores": 35.27, "margem_lula": 66, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0029", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 272, "comparecimento": 233, "faltosos": 39, "pct_abstencao": 14.34, "votos_nominais": 220, "votos_branco": 3, "votos_nulo": 10, "total_apurado": 233, "votos_validos": 222, "candidatos": {"13_LULA": 143, "22_FLAVIO_BOLSONARO": 75, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 143, "opositores_votos": 79, "pct_lula": 64.41, "pct_opositores": 35.59, "margem_lula": 64, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0030", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 270, "comparecimento": 242, "faltosos": 28, "pct_abstencao": 10.37, "votos_nominais": 232, "votos_branco": 2, "votos_nulo": 8, "total_apurado": 242, "votos_validos": 230, "candidatos": {"13_LULA": 153, "22_FLAVIO_BOLSONARO": 71, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 153, "opositores_votos": 77, "pct_lula": 66.52, "pct_opositores": 33.48, "margem_lula": 76, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0031", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 269, "comparecimento": 232, "faltosos": 37, "pct_abstencao": 13.75, "votos_nominais": 213, "votos_branco": 8, "votos_nulo": 11, "total_apurado": 232, "votos_validos": 217, "candidatos": {"13_LULA": 136, "22_FLAVIO_BOLSONARO": 70, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 4}, "lula_votos": 136, "opositores_votos": 81, "pct_lula": 62.67, "pct_opositores": 37.33, "margem_lula": 55, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0032", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1201", "aptos": 289, "comparecimento": 241, "faltosos": 48, "pct_abstencao": 16.61, "votos_nominais": 228, "votos_branco": 4, "votos_nulo": 9, "total_apurado": 241, "votos_validos": 229, "candidatos": {"13_LULA": 165, "22_FLAVIO_BOLSONARO": 55, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 3}, "lula_votos": 165, "opositores_votos": 64, "pct_lula": 72.05, "pct_opositores": 27.95, "margem_lula": 101, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF OSSIAN ARARIPE", "endereco_oficial": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0033", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1201", "aptos": 289, "comparecimento": 254, "faltosos": 35, "pct_abstencao": 12.11, "votos_nominais": 239, "votos_branco": 1, "votos_nulo": 14, "total_apurado": 254, "votos_validos": 247, "candidatos": {"13_LULA": 187, "22_FLAVIO_BOLSONARO": 50, "14_RENAN_SANTOS": 6, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 187, "opositores_votos": 60, "pct_lula": 75.71, "pct_opositores": 24.29, "margem_lula": 127, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF OSSIAN ARARIPE", "endereco_oficial": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO Locais de Votação - Seções E Aptos Página 1 de 5", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0034", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1201", "aptos": 291, "comparecimento": 257, "faltosos": 34, "pct_abstencao": 11.68, "votos_nominais": 237, "votos_branco": 3, "votos_nulo": 17, "total_apurado": 257, "votos_validos": 245, "candidatos": {"13_LULA": 175, "22_FLAVIO_BOLSONARO": 61, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 3}, "lula_votos": 175, "opositores_votos": 70, "pct_lula": 71.43, "pct_opositores": 28.57, "margem_lula": 105, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF OSSIAN ARARIPE", "endereco_oficial": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0035", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1899", "aptos": 208, "comparecimento": 158, "faltosos": 50, "pct_abstencao": 24.04, "votos_nominais": 145, "votos_branco": 2, "votos_nulo": 11, "total_apurado": 158, "votos_validos": 148, "candidatos": {"13_LULA": 109, "22_FLAVIO_BOLSONARO": 35, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 109, "opositores_votos": 39, "pct_lula": 73.65, "pct_opositores": 26.35, "margem_lula": 70, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF SÃO JOSÉ", "endereco_oficial": "DISTRITO DE SÃO FÉLIX - SAÍDA PARA OLHO D'ÁGUA SÃO FÉLIX-DISTRITO", "distrito": "Distrito de São Félix"}, {"secao": "0039", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1244", "aptos": 328, "comparecimento": 256, "faltosos": 72, "pct_abstencao": 21.95, "votos_nominais": 232, "votos_branco": 7, "votos_nulo": 17, "total_apurado": 256, "votos_validos": 242, "candidatos": {"13_LULA": 190, "22_FLAVIO_BOLSONARO": 51, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 190, "opositores_votos": 52, "pct_lula": 78.51, "pct_opositores": 21.49, "margem_lula": 138, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF FIRMINO ARARUNA DE SOUSA", "endereco_oficial": "RUA ROSENDO MANOEL DE SOUSA, S/N ANAUA-DISTRITO", "distrito": "Distrito de Anauá"}, {"secao": "0040", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1252", "aptos": 293, "comparecimento": 246, "faltosos": 47, "pct_abstencao": 16.04, "votos_nominais": 227, "votos_branco": 7, "votos_nulo": 12, "total_apurado": 246, "votos_validos": 230, "candidatos": {"13_LULA": 171, "22_FLAVIO_BOLSONARO": 49, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 3, "70_AUGUSTO_CURY": 2}, "lula_votos": 171, "opositores_votos": 59, "pct_lula": 74.35, "pct_opositores": 25.65, "margem_lula": 112, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF FILEMON TELES", "endereco_oficial": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0041", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1252", "aptos": 297, "comparecimento": 250, "faltosos": 47, "pct_abstencao": 15.82, "votos_nominais": 234, "votos_branco": 4, "votos_nulo": 12, "total_apurado": 250, "votos_validos": 239, "candidatos": {"13_LULA": 177, "22_FLAVIO_BOLSONARO": 49, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 8}, "lula_votos": 177, "opositores_votos": 62, "pct_lula": 74.06, "pct_opositores": 25.94, "margem_lula": 115, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF FILEMON TELES", "endereco_oficial": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0042", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1260", "aptos": 203, "comparecimento": 158, "faltosos": 45, "pct_abstencao": 22.17, "votos_nominais": 143, "votos_branco": 6, "votos_nulo": 9, "total_apurado": 158, "votos_validos": 148, "candidatos": {"13_LULA": 119, "22_FLAVIO_BOLSONARO": 25, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 3}, "lula_votos": 119, "opositores_votos": 29, "pct_lula": 80.41, "pct_opositores": 19.59, "margem_lula": 90, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF WALTER DE CALDAS TELES", "endereco_oficial": "RUA DA PAZ, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0043", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1260", "aptos": 201, "comparecimento": 154, "faltosos": 47, "pct_abstencao": 23.38, "votos_nominais": 132, "votos_branco": 6, "votos_nulo": 16, "total_apurado": 154, "votos_validos": 139, "candidatos": {"13_LULA": 111, "22_FLAVIO_BOLSONARO": 20, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 3}, "lula_votos": 111, "opositores_votos": 28, "pct_lula": 79.86, "pct_opositores": 20.14, "margem_lula": 83, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF WALTER DE CALDAS TELES", "endereco_oficial": "RUA DA PAZ, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0044", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1562", "aptos": 306, "comparecimento": 249, "faltosos": 57, "pct_abstencao": 18.63, "votos_nominais": 226, "votos_branco": 9, "votos_nulo": 14, "total_apurado": 249, "votos_validos": 233, "candidatos": {"13_LULA": 194, "22_FLAVIO_BOLSONARO": 35, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 194, "opositores_votos": 39, "pct_lula": 83.26, "pct_opositores": 16.74, "margem_lula": 155, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "SINDICATO DOS TRABALHADORES RURAIS DO DISTRITO DE BURITIZINHO", "endereco_oficial": "RUA JOÃO LUCAS, 103 BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0045", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1260", "aptos": 202, "comparecimento": 174, "faltosos": 28, "pct_abstencao": 13.86, "votos_nominais": 153, "votos_branco": 4, "votos_nulo": 17, "total_apurado": 174, "votos_validos": 164, "candidatos": {"13_LULA": 135, "22_FLAVIO_BOLSONARO": 22, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 135, "opositores_votos": 29, "pct_lula": 82.32, "pct_opositores": 17.68, "margem_lula": 106, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF WALTER DE CALDAS TELES", "endereco_oficial": "RUA DA PAZ, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0047", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1287", "aptos": 341, "comparecimento": 297, "faltosos": 44, "pct_abstencao": 12.9, "votos_nominais": 282, "votos_branco": 4, "votos_nulo": 11, "total_apurado": 297, "votos_validos": 291, "candidatos": {"13_LULA": 244, "22_FLAVIO_BOLSONARO": 39, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 244, "opositores_votos": 47, "pct_lula": 83.85, "pct_opositores": 16.15, "margem_lula": 197, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF EDSON OLEGÁRIO DE SANTANA", "endereco_oficial": "RUA CEL. NAZÁRIO, S/N COITE-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0048", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1287", "aptos": 338, "comparecimento": 293, "faltosos": 45, "pct_abstencao": 13.31, "votos_nominais": 275, "votos_branco": 4, "votos_nulo": 14, "total_apurado": 293, "votos_validos": 279, "candidatos": {"13_LULA": 233, "22_FLAVIO_BOLSONARO": 44, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 233, "opositores_votos": 46, "pct_lula": 83.51, "pct_opositores": 16.49, "margem_lula": 187, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF EDSON OLEGÁRIO DE SANTANA", "endereco_oficial": "RUA CEL. NAZÁRIO, S/N COITE-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0051", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1295", "aptos": 274, "comparecimento": 216, "faltosos": 58, "pct_abstencao": 21.17, "votos_nominais": 194, "votos_branco": 4, "votos_nulo": 18, "total_apurado": 216, "votos_validos": 200, "candidatos": {"13_LULA": 133, "22_FLAVIO_BOLSONARO": 56, "14_RENAN_SANTOS": 7, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 133, "opositores_votos": 67, "pct_lula": 66.5, "pct_opositores": 33.5, "margem_lula": 66, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CRECHE SONHO INFANTIL", "endereco_oficial": "RUA RAIMUNDO ALVES FERNANDES, S/N, SÃO FÉLIX-DISTRITO", "distrito": "Distrito de São Félix"}, {"secao": "0053", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1309", "aptos": 369, "comparecimento": 291, "faltosos": 78, "pct_abstencao": 21.14, "votos_nominais": 272, "votos_branco": 2, "votos_nulo": 17, "total_apurado": 291, "votos_validos": 277, "candidatos": {"13_LULA": 193, "22_FLAVIO_BOLSONARO": 75, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 5}, "lula_votos": 193, "opositores_votos": 84, "pct_lula": 69.68, "pct_opositores": 30.32, "margem_lula": 109, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEF JOSE ACÍLIO", "endereco_oficial": "RUA GABRIEL IZIDRO, SN PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0054", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1317", "aptos": 251, "comparecimento": 200, "faltosos": 51, "pct_abstencao": 20.32, "votos_nominais": 186, "votos_branco": 7, "votos_nulo": 7, "total_apurado": 200, "votos_validos": 191, "candidatos": {"13_LULA": 132, "22_FLAVIO_BOLSONARO": 55, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 132, "opositores_votos": 59, "pct_lula": 69.11, "pct_opositores": 30.89, "margem_lula": 73, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEIF CAREOLANO LEITE", "endereco_oficial": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO", "distrito": "Distrito de São Miguel"}, {"secao": "0055", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1317", "aptos": 248, "comparecimento": 205, "faltosos": 43, "pct_abstencao": 17.34, "votos_nominais": 182, "votos_branco": 6, "votos_nulo": 17, "total_apurado": 205, "votos_validos": 194, "candidatos": {"13_LULA": 132, "22_FLAVIO_BOLSONARO": 55, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 5}, "lula_votos": 132, "opositores_votos": 62, "pct_lula": 68.04, "pct_opositores": 31.96, "margem_lula": 70, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEIF CAREOLANO LEITE", "endereco_oficial": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO", "distrito": "Distrito de São Miguel"}, {"secao": "0056", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1317", "aptos": 248, "comparecimento": 206, "faltosos": 42, "pct_abstencao": 16.94, "votos_nominais": 185, "votos_branco": 8, "votos_nulo": 13, "total_apurado": 206, "votos_validos": 191, "candidatos": {"13_LULA": 147, "22_FLAVIO_BOLSONARO": 40, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 147, "opositores_votos": 44, "pct_lula": 76.96, "pct_opositores": 23.04, "margem_lula": 103, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF CAREOLANO LEITE", "endereco_oficial": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO", "distrito": "Distrito de São Miguel"}, {"secao": "0057", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1317", "aptos": 249, "comparecimento": 207, "faltosos": 42, "pct_abstencao": 16.87, "votos_nominais": 193, "votos_branco": 2, "votos_nulo": 12, "total_apurado": 207, "votos_validos": 202, "candidatos": {"13_LULA": 136, "22_FLAVIO_BOLSONARO": 58, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 5}, "lula_votos": 136, "opositores_votos": 66, "pct_lula": 67.33, "pct_opositores": 32.67, "margem_lula": 70, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEIF CAREOLANO LEITE", "endereco_oficial": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO", "distrito": "Distrito de São Miguel"}, {"secao": "0058", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1333", "aptos": 302, "comparecimento": 240, "faltosos": 62, "pct_abstencao": 20.53, "votos_nominais": 226, "votos_branco": 4, "votos_nulo": 10, "total_apurado": 240, "votos_validos": 231, "candidatos": {"13_LULA": 183, "22_FLAVIO_BOLSONARO": 47, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 183, "opositores_votos": 48, "pct_lula": 79.22, "pct_opositores": 20.78, "margem_lula": 135, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF MAJOR JOAQUIM ANTONIO FURTADO", "endereco_oficial": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0059", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1333", "aptos": 300, "comparecimento": 237, "faltosos": 63, "pct_abstencao": 21.0, "votos_nominais": 216, "votos_branco": 4, "votos_nulo": 17, "total_apurado": 237, "votos_validos": 218, "candidatos": {"13_LULA": 161, "22_FLAVIO_BOLSONARO": 52, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 161, "opositores_votos": 57, "pct_lula": 73.85, "pct_opositores": 26.15, "margem_lula": 104, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF MAJOR JOAQUIM ANTONIO FURTADO", "endereco_oficial": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0060", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2062", "aptos": 353, "comparecimento": 287, "faltosos": 66, "pct_abstencao": 18.7, "votos_nominais": 268, "votos_branco": 3, "votos_nulo": 16, "total_apurado": 287, "votos_validos": 275, "candidatos": {"13_LULA": 200, "22_FLAVIO_BOLSONARO": 73, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 200, "opositores_votos": 75, "pct_lula": 72.73, "pct_opositores": 27.27, "margem_lula": 125, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "UBS QUIXABINHA", "endereco_oficial": "SITIO CANABRAVINHA PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0062", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1309", "aptos": 364, "comparecimento": 303, "faltosos": 61, "pct_abstencao": 16.76, "votos_nominais": 287, "votos_branco": 3, "votos_nulo": 13, "total_apurado": 303, "votos_validos": 292, "candidatos": {"13_LULA": 211, "22_FLAVIO_BOLSONARO": 73, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 4}, "lula_votos": 211, "opositores_votos": 81, "pct_lula": 72.26, "pct_opositores": 27.74, "margem_lula": 130, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOSE ACÍLIO", "endereco_oficial": "RUA GABRIEL IZIDRO, SN PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0063", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1112", "aptos": 220, "comparecimento": 182, "faltosos": 38, "pct_abstencao": 17.27, "votos_nominais": 166, "votos_branco": 4, "votos_nulo": 12, "total_apurado": 182, "votos_validos": 177, "candidatos": {"13_LULA": 121, "22_FLAVIO_BOLSONARO": 49, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 2}, "lula_votos": 121, "opositores_votos": 56, "pct_lula": 68.36, "pct_opositores": 31.64, "margem_lula": 65, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO EDUCACIONAL DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0065", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1651", "aptos": 197, "comparecimento": 162, "faltosos": 35, "pct_abstencao": 17.77, "votos_nominais": 147, "votos_branco": 2, "votos_nulo": 13, "total_apurado": 162, "votos_validos": 150, "candidatos": {"13_LULA": 98, "22_FLAVIO_BOLSONARO": 48, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 98, "opositores_votos": 52, "pct_lula": 65.33, "pct_opositores": 34.67, "margem_lula": 46, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "POSTO DE SAÚDE DR. OSCAR F. SOBRAL", "endereco_oficial": "AV. BURITI GRANDE, S/N", "distrito": "Sede / Outros"}, {"secao": "0066", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1333", "aptos": 299, "comparecimento": 253, "faltosos": 46, "pct_abstencao": 15.38, "votos_nominais": 222, "votos_branco": 7, "votos_nulo": 24, "total_apurado": 253, "votos_validos": 230, "candidatos": {"13_LULA": 182, "22_FLAVIO_BOLSONARO": 42, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 3, "70_AUGUSTO_CURY": 1}, "lula_votos": 182, "opositores_votos": 48, "pct_lula": 79.13, "pct_opositores": 20.87, "margem_lula": 134, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF MAJOR JOAQUIM ANTONIO FURTADO", "endereco_oficial": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0067", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1384", "aptos": 271, "comparecimento": 224, "faltosos": 47, "pct_abstencao": 17.34, "votos_nominais": 195, "votos_branco": 5, "votos_nulo": 24, "total_apurado": 224, "votos_validos": 202, "candidatos": {"13_LULA": 163, "22_FLAVIO_BOLSONARO": 36, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 0}, "lula_votos": 163, "opositores_votos": 39, "pct_lula": 80.69, "pct_opositores": 19.31, "margem_lula": 124, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE SRA. SANTANA", "endereco_oficial": "RUA MAJOR JOAQUIM FURTADO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0068", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1015", "aptos": 189, "comparecimento": 161, "faltosos": 30, "pct_abstencao": 15.87, "votos_nominais": 148, "votos_branco": 1, "votos_nulo": 10, "total_apurado": 159, "votos_validos": 158, "candidatos": {"13_LULA": 107, "22_FLAVIO_BOLSONARO": 48, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 107, "opositores_votos": 51, "pct_lula": 67.72, "pct_opositores": 32.28, "margem_lula": 56, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA", "endereco_oficial": "RUA PADRE MACEDO, S/N, CENTRO", "distrito": "Centro"}, {"secao": "0070", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1015", "aptos": 190, "comparecimento": 162, "faltosos": 28, "pct_abstencao": 14.74, "votos_nominais": 150, "votos_branco": 3, "votos_nulo": 9, "total_apurado": 162, "votos_validos": 159, "candidatos": {"13_LULA": 105, "22_FLAVIO_BOLSONARO": 50, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 105, "opositores_votos": 54, "pct_lula": 66.04, "pct_opositores": 33.96, "margem_lula": 51, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO DE PASTORAL PE. ARGEMIRO ROLIM DE OLIVEIRA", "endereco_oficial": "RUA PADRE MACEDO, S/N, CENTRO", "distrito": "Centro"}, {"secao": "0072", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 265, "comparecimento": 220, "faltosos": 45, "pct_abstencao": 16.98, "votos_nominais": 204, "votos_branco": 2, "votos_nulo": 14, "total_apurado": 220, "votos_validos": 214, "candidatos": {"13_LULA": 144, "22_FLAVIO_BOLSONARO": 66, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 144, "opositores_votos": 70, "pct_lula": 67.29, "pct_opositores": 32.71, "margem_lula": 74, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0073", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1309", "aptos": 182, "comparecimento": 156, "faltosos": 26, "pct_abstencao": 14.29, "votos_nominais": 142, "votos_branco": 2, "votos_nulo": 12, "total_apurado": 156, "votos_validos": 147, "candidatos": {"13_LULA": 113, "22_FLAVIO_BOLSONARO": 33, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 113, "opositores_votos": 34, "pct_lula": 76.87, "pct_opositores": 23.13, "margem_lula": 79, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOSE ACÍLIO", "endereco_oficial": "RUA GABRIEL IZIDRO, SN PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0074", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1970", "aptos": 333, "comparecimento": 261, "faltosos": 72, "pct_abstencao": 21.62, "votos_nominais": 240, "votos_branco": 3, "votos_nulo": 18, "total_apurado": 261, "votos_validos": 250, "candidatos": {"13_LULA": 157, "22_FLAVIO_BOLSONARO": 79, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 7, "70_AUGUSTO_CURY": 2}, "lula_votos": 157, "opositores_votos": 93, "pct_lula": 62.8, "pct_opositores": 37.2, "margem_lula": 64, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CÂMARA MUNICIPAL DE MAURITI", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N", "distrito": "Sede / Outros"}, {"secao": "0075", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1970", "aptos": 328, "comparecimento": 253, "faltosos": 75, "pct_abstencao": 22.87, "votos_nominais": 230, "votos_branco": 5, "votos_nulo": 18, "total_apurado": 253, "votos_validos": 238, "candidatos": {"13_LULA": 147, "22_FLAVIO_BOLSONARO": 81, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 4}, "lula_votos": 147, "opositores_votos": 91, "pct_lula": 61.76, "pct_opositores": 38.24, "margem_lula": 56, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CÂMARA MUNICIPAL DE MAURITI", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N", "distrito": "Sede / Outros"}, {"secao": "0076", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1457", "aptos": 315, "comparecimento": 257, "faltosos": 58, "pct_abstencao": 18.41, "votos_nominais": 239, "votos_branco": 2, "votos_nulo": 16, "total_apurado": 257, "votos_validos": 247, "candidatos": {"13_LULA": 141, "22_FLAVIO_BOLSONARO": 98, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 3}, "lula_votos": 141, "opositores_votos": 106, "pct_lula": 57.09, "pct_opositores": 42.91, "margem_lula": 35, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "SINDICATO DOS TRABALHADORES RURAIS DE MAURITI", "endereco_oficial": "RUA JOSÉ QUINTINO, 55 CENTRO", "distrito": "Centro"}, {"secao": "0077", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1511", "aptos": 329, "comparecimento": 265, "faltosos": 64, "pct_abstencao": 19.45, "votos_nominais": 233, "votos_branco": 5, "votos_nulo": 27, "total_apurado": 265, "votos_validos": 245, "candidatos": {"13_LULA": 187, "22_FLAVIO_BOLSONARO": 51, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 4, "70_AUGUSTO_CURY": 0}, "lula_votos": 187, "opositores_votos": 58, "pct_lula": 76.33, "pct_opositores": 23.67, "margem_lula": 129, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE MAGIA", "endereco_oficial": "RUA MANOEL FELIPE, S/N - POVOADO DE SANTO ANTONIO DOS FELIPES, BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0078", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1465", "aptos": 169, "comparecimento": 150, "faltosos": 19, "pct_abstencao": 11.24, "votos_nominais": 141, "votos_branco": 2, "votos_nulo": 7, "total_apurado": 150, "votos_validos": 145, "candidatos": {"13_LULA": 104, "22_FLAVIO_BOLSONARO": 33, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 5}, "lula_votos": 104, "opositores_votos": 41, "pct_lula": 71.72, "pct_opositores": 28.28, "margem_lula": 63, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "ASSOCIAÇÃO DOS AGRICULTORES DO SÍTIO ESTRELINHA", "endereco_oficial": "SITIO ESTRELINHA", "distrito": "Zona Rural / Sítios"}, {"secao": "0079", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 266, "comparecimento": 240, "faltosos": 26, "pct_abstencao": 9.77, "votos_nominais": 225, "votos_branco": 4, "votos_nulo": 11, "total_apurado": 240, "votos_validos": 233, "candidatos": {"13_LULA": 150, "22_FLAVIO_BOLSONARO": 78, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 150, "opositores_votos": 83, "pct_lula": 64.38, "pct_opositores": 35.62, "margem_lula": 67, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0080", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2011", "aptos": 251, "comparecimento": 204, "faltosos": 47, "pct_abstencao": 18.73, "votos_nominais": 189, "votos_branco": 2, "votos_nulo": 13, "total_apurado": 204, "votos_validos": 195, "candidatos": {"13_LULA": 169, "22_FLAVIO_BOLSONARO": 21, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 169, "opositores_votos": 26, "pct_lula": 86.67, "pct_opositores": 13.33, "margem_lula": 143, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF FRANCISCO VICTOR DE MARIA", "endereco_oficial": "SITIO CAJUEIRO DO COITE COITE-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0081", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1260", "aptos": 201, "comparecimento": 175, "faltosos": 26, "pct_abstencao": 12.94, "votos_nominais": 159, "votos_branco": 4, "votos_nulo": 12, "total_apurado": 175, "votos_validos": 169, "candidatos": {"13_LULA": 129, "22_FLAVIO_BOLSONARO": 35, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 129, "opositores_votos": 40, "pct_lula": 76.33, "pct_opositores": 23.67, "margem_lula": 89, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF WALTER DE CALDAS TELES", "endereco_oficial": "RUA DA PAZ, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0082", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1538", "aptos": 306, "comparecimento": 251, "faltosos": 55, "pct_abstencao": 17.97, "votos_nominais": 233, "votos_branco": 3, "votos_nulo": 15, "total_apurado": 251, "votos_validos": 239, "candidatos": {"13_LULA": 193, "22_FLAVIO_BOLSONARO": 40, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 193, "opositores_votos": 46, "pct_lula": 80.75, "pct_opositores": 19.25, "margem_lula": 147, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF JOÃO FURTADO MARANHÃO", "endereco_oficial": "SITIO CURTUME SAO MIGUEL-DISTRITO", "distrito": "Distrito de São Miguel"}, {"secao": "0083", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 268, "comparecimento": 232, "faltosos": 36, "pct_abstencao": 13.43, "votos_nominais": 220, "votos_branco": 3, "votos_nulo": 9, "total_apurado": 232, "votos_validos": 224, "candidatos": {"13_LULA": 153, "22_FLAVIO_BOLSONARO": 66, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 153, "opositores_votos": 71, "pct_lula": 68.3, "pct_opositores": 31.7, "margem_lula": 82, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0084", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1490", "aptos": 239, "comparecimento": 179, "faltosos": 60, "pct_abstencao": 25.1, "votos_nominais": 156, "votos_branco": 3, "votos_nulo": 20, "total_apurado": 179, "votos_validos": 165, "candidatos": {"13_LULA": 138, "22_FLAVIO_BOLSONARO": 25, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 138, "opositores_votos": 27, "pct_lula": 83.64, "pct_opositores": 16.36, "margem_lula": 111, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOSÉ JOAQUIM DE SOUSA", "endereco_oficial": "RUA DOMINGOS ALVES DE ANDRADE OLHO D'ÁGUA-DISTRITO", "distrito": "Sede / Outros"}, {"secao": "0085", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1660", "aptos": 164, "comparecimento": 140, "faltosos": 24, "pct_abstencao": 14.63, "votos_nominais": 134, "votos_branco": 1, "votos_nulo": 5, "total_apurado": 140, "votos_validos": 136, "candidatos": {"13_LULA": 119, "22_FLAVIO_BOLSONARO": 8, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 5}, "lula_votos": 119, "opositores_votos": 17, "pct_lula": 87.5, "pct_opositores": 12.5, "margem_lula": 102, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOAQUIM PIMENTA", "endereco_oficial": "POVOADO DE SÃO SEBASTIÃO BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0086", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1945", "aptos": 320, "comparecimento": 266, "faltosos": 54, "pct_abstencao": 16.88, "votos_nominais": 245, "votos_branco": 5, "votos_nulo": 16, "total_apurado": 266, "votos_validos": 251, "candidatos": {"13_LULA": 162, "22_FLAVIO_BOLSONARO": 83, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 162, "opositores_votos": 89, "pct_lula": 64.54, "pct_opositores": 35.46, "margem_lula": 73, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA", "endereco_oficial": "RUA 03, S/N BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0087", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1490", "aptos": 205, "comparecimento": 165, "faltosos": 40, "pct_abstencao": 19.51, "votos_nominais": 153, "votos_branco": 3, "votos_nulo": 9, "total_apurado": 165, "votos_validos": 159, "candidatos": {"13_LULA": 129, "22_FLAVIO_BOLSONARO": 29, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 129, "opositores_votos": 30, "pct_lula": 81.13, "pct_opositores": 18.87, "margem_lula": 99, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOSÉ JOAQUIM DE SOUSA", "endereco_oficial": "RUA DOMINGOS ALVES DE ANDRADE OLHO D'ÁGUA-DISTRITO", "distrito": "Sede / Outros"}, {"secao": "0088", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1643", "aptos": 275, "comparecimento": 222, "faltosos": 53, "pct_abstencao": 19.27, "votos_nominais": 206, "votos_branco": 3, "votos_nulo": 13, "total_apurado": 222, "votos_validos": 205, "candidatos": {"13_LULA": 160, "22_FLAVIO_BOLSONARO": 43, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 160, "opositores_votos": 45, "pct_lula": 78.05, "pct_opositores": 21.95, "margem_lula": 115, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF ZEFINHA CARTAXO", "endereco_oficial": "SITIO DANTAS DANTAS", "distrito": "Zona Rural / Sítios"}, {"secao": "0089", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1678", "aptos": 279, "comparecimento": 235, "faltosos": 44, "pct_abstencao": 15.77, "votos_nominais": 205, "votos_branco": 10, "votos_nulo": 20, "total_apurado": 235, "votos_validos": 216, "candidatos": {"13_LULA": 167, "22_FLAVIO_BOLSONARO": 43, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 167, "opositores_votos": 49, "pct_lula": 77.31, "pct_opositores": 22.69, "margem_lula": 118, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOÃO LEITE DA SILVA", "endereco_oficial": "SITIO MACAMBIRA BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0090", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1686", "aptos": 267, "comparecimento": 201, "faltosos": 66, "pct_abstencao": 24.72, "votos_nominais": 186, "votos_branco": 2, "votos_nulo": 13, "total_apurado": 201, "votos_validos": 197, "candidatos": {"13_LULA": 139, "22_FLAVIO_BOLSONARO": 57, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 139, "opositores_votos": 58, "pct_lula": 70.56, "pct_opositores": 29.44, "margem_lula": 81, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF JARBAS PASSARINHO", "endereco_oficial": "SITIO SANTO ANTONIO DOS POSSEIROS ANAUA-DISTRITO", "distrito": "Distrito de Anauá"}, {"secao": "0091", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 268, "comparecimento": 244, "faltosos": 24, "pct_abstencao": 8.96, "votos_nominais": 233, "votos_branco": 4, "votos_nulo": 7, "total_apurado": 244, "votos_validos": 237, "candidatos": {"13_LULA": 155, "22_FLAVIO_BOLSONARO": 75, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 4}, "lula_votos": 155, "opositores_votos": 82, "pct_lula": 65.4, "pct_opositores": 34.6, "margem_lula": 73, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0094", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1155", "aptos": 325, "comparecimento": 290, "faltosos": 35, "pct_abstencao": 10.77, "votos_nominais": 271, "votos_branco": 8, "votos_nulo": 11, "total_apurado": 290, "votos_validos": 280, "candidatos": {"13_LULA": 192, "22_FLAVIO_BOLSONARO": 80, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 5}, "lula_votos": 192, "opositores_votos": 88, "pct_lula": 68.57, "pct_opositores": 31.43, "margem_lula": 104, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ADAUTO LEITE", "endereco_oficial": "AV. SINVAL LACERDA, 416 CENTRO", "distrito": "Centro"}, {"secao": "0095", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1333", "aptos": 301, "comparecimento": 262, "faltosos": 39, "pct_abstencao": 12.96, "votos_nominais": 230, "votos_branco": 7, "votos_nulo": 25, "total_apurado": 262, "votos_validos": 250, "candidatos": {"13_LULA": 181, "22_FLAVIO_BOLSONARO": 65, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 181, "opositores_votos": 69, "pct_lula": 72.4, "pct_opositores": 27.6, "margem_lula": 112, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF MAJOR JOAQUIM ANTONIO FURTADO", "endereco_oficial": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0096", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1252", "aptos": 293, "comparecimento": 252, "faltosos": 41, "pct_abstencao": 13.99, "votos_nominais": 237, "votos_branco": 4, "votos_nulo": 11, "total_apurado": 252, "votos_validos": 242, "candidatos": {"13_LULA": 185, "22_FLAVIO_BOLSONARO": 49, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 5}, "lula_votos": 185, "opositores_votos": 57, "pct_lula": 76.45, "pct_opositores": 23.55, "margem_lula": 128, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF FILEMON TELES", "endereco_oficial": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0098", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1988", "aptos": 342, "comparecimento": 286, "faltosos": 57, "pct_abstencao": 16.67, "votos_nominais": 263, "votos_branco": 7, "votos_nulo": 15, "total_apurado": 285, "votos_validos": 275, "candidatos": {"13_LULA": 200, "22_FLAVIO_BOLSONARO": 64, "14_RENAN_SANTOS": 6, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 4}, "lula_votos": 200, "opositores_votos": 75, "pct_lula": 72.73, "pct_opositores": 27.27, "margem_lula": 125, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CENTRO VOCACIONAL TECNOLÓGICO", "endereco_oficial": "AV. SINVAL LACERDA, S/N, CENTRO", "distrito": "Centro"}, {"secao": "0099", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1317", "aptos": 250, "comparecimento": 217, "faltosos": 33, "pct_abstencao": 13.2, "votos_nominais": 201, "votos_branco": 9, "votos_nulo": 7, "total_apurado": 217, "votos_validos": 204, "candidatos": {"13_LULA": 134, "22_FLAVIO_BOLSONARO": 67, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 134, "opositores_votos": 70, "pct_lula": 65.69, "pct_opositores": 34.31, "margem_lula": 64, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEIF CAREOLANO LEITE", "endereco_oficial": "RUA SALUSTIANO RODRIGUES, S/N SAO MIGUEL-DISTRITO", "distrito": "Distrito de São Miguel"}, {"secao": "0100", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1996", "aptos": 214, "comparecimento": 184, "faltosos": 30, "pct_abstencao": 14.02, "votos_nominais": 177, "votos_branco": 5, "votos_nulo": 2, "total_apurado": 184, "votos_validos": 178, "candidatos": {"13_LULA": 126, "22_FLAVIO_BOLSONARO": 48, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 126, "opositores_votos": 52, "pct_lula": 70.79, "pct_opositores": 29.21, "margem_lula": 74, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF HUMBERTO BEZERRA", "endereco_oficial": "RUA JOSE LEITE DA COSTA, S/N CENTRO", "distrito": "Centro"}, {"secao": "0101", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1996", "aptos": 220, "comparecimento": 192, "faltosos": 28, "pct_abstencao": 12.73, "votos_nominais": 183, "votos_branco": 3, "votos_nulo": 6, "total_apurado": 192, "votos_validos": 184, "candidatos": {"13_LULA": 124, "22_FLAVIO_BOLSONARO": 56, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 3, "70_AUGUSTO_CURY": 1}, "lula_votos": 124, "opositores_votos": 60, "pct_lula": 67.39, "pct_opositores": 32.61, "margem_lula": 64, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEIF HUMBERTO BEZERRA", "endereco_oficial": "RUA JOSE LEITE DA COSTA, S/N CENTRO", "distrito": "Centro"}, {"secao": "0103", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1252", "aptos": 296, "comparecimento": 253, "faltosos": 43, "pct_abstencao": 14.53, "votos_nominais": 240, "votos_branco": 3, "votos_nulo": 10, "total_apurado": 253, "votos_validos": 244, "candidatos": {"13_LULA": 189, "22_FLAVIO_BOLSONARO": 46, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 5}, "lula_votos": 189, "opositores_votos": 55, "pct_lula": 77.46, "pct_opositores": 22.54, "margem_lula": 134, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF FILEMON TELES", "endereco_oficial": "RUA JOAO LUCAS, S/N BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0104", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1112", "aptos": 222, "comparecimento": 195, "faltosos": 27, "pct_abstencao": 12.16, "votos_nominais": 172, "votos_branco": 8, "votos_nulo": 15, "total_apurado": 195, "votos_validos": 186, "candidatos": {"13_LULA": 119, "22_FLAVIO_BOLSONARO": 63, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 119, "opositores_votos": 67, "pct_lula": 63.98, "pct_opositores": 36.02, "margem_lula": 52, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO EDUCACIONAL DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0105", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1112", "aptos": 218, "comparecimento": 193, "faltosos": 25, "pct_abstencao": 11.47, "votos_nominais": 173, "votos_branco": 7, "votos_nulo": 13, "total_apurado": 193, "votos_validos": 180, "candidatos": {"13_LULA": 107, "22_FLAVIO_BOLSONARO": 66, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 3}, "lula_votos": 107, "opositores_votos": 73, "pct_lula": 59.44, "pct_opositores": 40.56, "margem_lula": 34, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CENTRO EDUCACIONAL DE MAURITI", "endereco_oficial": "RUA JOSÉ LEITE DA COSTA, 629, SERRINHA", "distrito": "Bairro Serrinha"}, {"secao": "0108", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1724", "aptos": 346, "comparecimento": 291, "faltosos": 55, "pct_abstencao": 15.9, "votos_nominais": 272, "votos_branco": 8, "votos_nulo": 11, "total_apurado": 291, "votos_validos": 278, "candidatos": {"13_LULA": 183, "22_FLAVIO_BOLSONARO": 87, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 4}, "lula_votos": 183, "opositores_votos": 95, "pct_lula": 65.83, "pct_opositores": 34.17, "margem_lula": 88, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CAPELA SÃO FRANCISCO", "endereco_oficial": "RUA AMELIO LEITE, 388, POPULARES", "distrito": "Bairro Populares"}, {"secao": "0110", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1759", "aptos": 264, "comparecimento": 199, "faltosos": 65, "pct_abstencao": 24.62, "votos_nominais": 186, "votos_branco": 3, "votos_nulo": 10, "total_apurado": 199, "votos_validos": 192, "candidatos": {"13_LULA": 174, "22_FLAVIO_BOLSONARO": 14, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 174, "opositores_votos": 18, "pct_lula": 90.62, "pct_opositores": 9.38, "margem_lula": 156, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF LUIZ FELIPE", "endereco_oficial": "SITIO SERRA BRAVA SÃO FÉLIX-DISTRITO", "distrito": "Distrito de São Félix"}, {"secao": "0111", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1775", "aptos": 260, "comparecimento": 231, "faltosos": 29, "pct_abstencao": 11.15, "votos_nominais": 211, "votos_branco": 2, "votos_nulo": 18, "total_apurado": 231, "votos_validos": 219, "candidatos": {"13_LULA": 156, "22_FLAVIO_BOLSONARO": 50, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 3, "70_AUGUSTO_CURY": 6}, "lula_votos": 156, "opositores_votos": 63, "pct_lula": 71.23, "pct_opositores": 28.77, "margem_lula": 93, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOÃO SEVERINO", "endereco_oficial": "SITIO CARNAUBINHA UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0112", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1848", "aptos": 100, "comparecimento": 90, "faltosos": 10, "pct_abstencao": 10.0, "votos_nominais": 83, "votos_branco": 3, "votos_nulo": 4, "total_apurado": 90, "votos_validos": 86, "candidatos": {"13_LULA": 81, "22_FLAVIO_BOLSONARO": 4, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 81, "opositores_votos": 5, "pct_lula": 94.19, "pct_opositores": 5.81, "margem_lula": 76, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "POSTO DE SAÚDE DO SÍTIO VÁRZEA GRANDE", "endereco_oficial": "SITIO VARZEA GRANDE PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0113", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1783", "aptos": 201, "comparecimento": 172, "faltosos": 29, "pct_abstencao": 14.43, "votos_nominais": 165, "votos_branco": 3, "votos_nulo": 4, "total_apurado": 172, "votos_validos": 166, "candidatos": {"13_LULA": 148, "22_FLAVIO_BOLSONARO": 15, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 148, "opositores_votos": 18, "pct_lula": 89.16, "pct_opositores": 10.84, "margem_lula": 130, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "ASSOCIAÇÃO COMUNITÁRIA DO SÍTIO GIQUI", "endereco_oficial": "SITIO GIQUI, PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0114", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2186", "aptos": 274, "comparecimento": 250, "faltosos": 24, "pct_abstencao": 8.76, "votos_nominais": 237, "votos_branco": 3, "votos_nulo": 10, "total_apurado": 250, "votos_validos": 239, "candidatos": {"13_LULA": 189, "22_FLAVIO_BOLSONARO": 46, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 189, "opositores_votos": 50, "pct_lula": 79.08, "pct_opositores": 20.92, "margem_lula": 139, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOÃO BATISTA MONTENEGRO", "endereco_oficial": "SÍTIO MACELA COITE-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0115", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1813", "aptos": 259, "comparecimento": 195, "faltosos": 64, "pct_abstencao": 24.71, "votos_nominais": 171, "votos_branco": 9, "votos_nulo": 15, "total_apurado": 195, "votos_validos": 184, "candidatos": {"13_LULA": 132, "22_FLAVIO_BOLSONARO": 49, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 132, "opositores_votos": 52, "pct_lula": 71.74, "pct_opositores": 28.26, "margem_lula": 80, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOSÉ LOPES DINIZ", "endereco_oficial": "SITIO OLHO D'ÁGUA COITE-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0116", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1821", "aptos": 323, "comparecimento": 261, "faltosos": 62, "pct_abstencao": 19.2, "votos_nominais": 253, "votos_branco": 1, "votos_nulo": 7, "total_apurado": 261, "votos_validos": 252, "candidatos": {"13_LULA": 211, "22_FLAVIO_BOLSONARO": 38, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 2}, "lula_votos": 211, "opositores_votos": 41, "pct_lula": 83.73, "pct_opositores": 16.27, "margem_lula": 170, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOSE WILSON BARBOSA DE OLIVEIRA", "endereco_oficial": "SITIO PITOMBEIRAS SEDE", "distrito": "Zona Rural / Sítios"}, {"secao": "0117", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1481", "aptos": 112, "comparecimento": 94, "faltosos": 18, "pct_abstencao": 16.07, "votos_nominais": 85, "votos_branco": 5, "votos_nulo": 4, "total_apurado": 94, "votos_validos": 85, "candidatos": {"13_LULA": 64, "22_FLAVIO_BOLSONARO": 20, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 64, "opositores_votos": 21, "pct_lula": 75.29, "pct_opositores": 24.71, "margem_lula": 43, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CAPELA SÃO PEDRO", "endereco_oficial": "SITIO LUCIANO FUNCIONARÁ NA EEF ANTONIO FURTADO DE OLIVEIRA", "distrito": "Zona Rural / Sítios"}, {"secao": "0118", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1830", "aptos": 342, "comparecimento": 294, "faltosos": 48, "pct_abstencao": 14.04, "votos_nominais": 267, "votos_branco": 11, "votos_nulo": 16, "total_apurado": 294, "votos_validos": 281, "candidatos": {"13_LULA": 204, "22_FLAVIO_BOLSONARO": 66, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 8}, "lula_votos": 204, "opositores_votos": 77, "pct_lula": 72.6, "pct_opositores": 27.4, "margem_lula": 127, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE IDEAL DA CRIANÇA", "endereco_oficial": "SITIO APANHA PEIXE, SEDE", "distrito": "Zona Rural / Sítios"}, {"secao": "0119", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1856", "aptos": 162, "comparecimento": 145, "faltosos": 17, "pct_abstencao": 10.49, "votos_nominais": 137, "votos_branco": 4, "votos_nulo": 4, "total_apurado": 145, "votos_validos": 137, "candidatos": {"13_LULA": 121, "22_FLAVIO_BOLSONARO": 13, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 121, "opositores_votos": 16, "pct_lula": 88.32, "pct_opositores": 11.68, "margem_lula": 105, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF LUIZ FLORENTINO DOS SANTOS", "endereco_oficial": "SITIO CARNAUBINHA DOS PEUS BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0121", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1864", "aptos": 177, "comparecimento": 153, "faltosos": 24, "pct_abstencao": 13.56, "votos_nominais": 133, "votos_branco": 7, "votos_nulo": 13, "total_apurado": 153, "votos_validos": 135, "candidatos": {"13_LULA": 107, "22_FLAVIO_BOLSONARO": 27, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 0}, "lula_votos": 107, "opositores_votos": 28, "pct_lula": 79.26, "pct_opositores": 20.74, "margem_lula": 79, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "GRUPO ESCOLAR DO SÍTIO AÇUDE VELHO", "endereco_oficial": "SITIO AÇUDE VELHO UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0122", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1791", "aptos": 217, "comparecimento": 195, "faltosos": 22, "pct_abstencao": 10.14, "votos_nominais": 179, "votos_branco": 1, "votos_nulo": 15, "total_apurado": 195, "votos_validos": 185, "candidatos": {"13_LULA": 155, "22_FLAVIO_BOLSONARO": 22, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 5}, "lula_votos": 155, "opositores_votos": 30, "pct_lula": 83.78, "pct_opositores": 16.22, "margem_lula": 125, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF ANTONIO GOMES", "endereco_oficial": "SITIO NOVO PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0123", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1767", "aptos": 254, "comparecimento": 231, "faltosos": 23, "pct_abstencao": 9.06, "votos_nominais": 217, "votos_branco": 1, "votos_nulo": 13, "total_apurado": 231, "votos_validos": 224, "candidatos": {"13_LULA": 168, "22_FLAVIO_BOLSONARO": 51, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 1}, "lula_votos": 168, "opositores_votos": 56, "pct_lula": 75.0, "pct_opositores": 25.0, "margem_lula": 112, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF ANTONIO FURTADO DE OLIVEIRA", "endereco_oficial": "SITIO FURTUNA SEDE", "distrito": "Zona Rural / Sítios"}, {"secao": "0124", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1473", "aptos": 232, "comparecimento": 197, "faltosos": 35, "pct_abstencao": 15.09, "votos_nominais": 180, "votos_branco": 9, "votos_nulo": 8, "total_apurado": 197, "votos_validos": 186, "candidatos": {"13_LULA": 144, "22_FLAVIO_BOLSONARO": 39, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 144, "opositores_votos": 42, "pct_lula": 77.42, "pct_opositores": 22.58, "margem_lula": 102, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "ASSOCIAÇÃO COMUNITÁRIA DOS PRODUTORES RURAIS DO SÍTIO VOLTA", "endereco_oficial": "SITIO VOLTA", "distrito": "Zona Rural / Sítios"}, {"secao": "0125", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1740", "aptos": 189, "comparecimento": 161, "faltosos": 28, "pct_abstencao": 14.81, "votos_nominais": 152, "votos_branco": 2, "votos_nulo": 7, "total_apurado": 161, "votos_validos": 153, "candidatos": {"13_LULA": 108, "22_FLAVIO_BOLSONARO": 30, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 12}, "lula_votos": 108, "opositores_votos": 45, "pct_lula": 70.59, "pct_opositores": 29.41, "margem_lula": 63, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF FRANCISCO BARBOSA DOS SANTOS", "endereco_oficial": "SITIO TRINCHEIRAS SEDE", "distrito": "Zona Rural / Sítios"}, {"secao": "0126", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1902", "aptos": 205, "comparecimento": 174, "faltosos": 31, "pct_abstencao": 15.12, "votos_nominais": 166, "votos_branco": 1, "votos_nulo": 7, "total_apurado": 174, "votos_validos": 170, "candidatos": {"13_LULA": 151, "22_FLAVIO_BOLSONARO": 17, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 151, "opositores_votos": 19, "pct_lula": 88.82, "pct_opositores": 11.18, "margem_lula": 132, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF ANTONIO LEITE", "endereco_oficial": "SITIO GOMES PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0128", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1899", "aptos": 237, "comparecimento": 183, "faltosos": 54, "pct_abstencao": 22.78, "votos_nominais": 165, "votos_branco": 6, "votos_nulo": 12, "total_apurado": 183, "votos_validos": 174, "candidatos": {"13_LULA": 122, "22_FLAVIO_BOLSONARO": 46, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 122, "opositores_votos": 52, "pct_lula": 70.11, "pct_opositores": 29.89, "margem_lula": 70, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF SÃO JOSÉ", "endereco_oficial": "DISTRITO DE SÃO FÉLIX - SAÍDA PARA OLHO D'ÁGUA SÃO FÉLIX-DISTRITO", "distrito": "Distrito de São Félix"}, {"secao": "0130", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1490", "aptos": 233, "comparecimento": 189, "faltosos": 44, "pct_abstencao": 18.88, "votos_nominais": 180, "votos_branco": 5, "votos_nulo": 4, "total_apurado": 189, "votos_validos": 186, "candidatos": {"13_LULA": 150, "22_FLAVIO_BOLSONARO": 33, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 150, "opositores_votos": 36, "pct_lula": 80.65, "pct_opositores": 19.35, "margem_lula": 114, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOSÉ JOAQUIM DE SOUSA", "endereco_oficial": "RUA DOMINGOS ALVES DE ANDRADE OLHO D'ÁGUA-DISTRITO", "distrito": "Sede / Outros"}, {"secao": "0131", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1490", "aptos": 207, "comparecimento": 170, "faltosos": 37, "pct_abstencao": 17.87, "votos_nominais": 152, "votos_branco": 7, "votos_nulo": 11, "total_apurado": 170, "votos_validos": 162, "candidatos": {"13_LULA": 130, "22_FLAVIO_BOLSONARO": 28, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 130, "opositores_votos": 32, "pct_lula": 80.25, "pct_opositores": 19.75, "margem_lula": 98, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOSÉ JOAQUIM DE SOUSA", "endereco_oficial": "RUA DOMINGOS ALVES DE ANDRADE OLHO D'ÁGUA-DISTRITO", "distrito": "Sede / Outros"}, {"secao": "0132", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1945", "aptos": 320, "comparecimento": 265, "faltosos": 55, "pct_abstencao": 17.19, "votos_nominais": 248, "votos_branco": 6, "votos_nulo": 11, "total_apurado": 265, "votos_validos": 254, "candidatos": {"13_LULA": 166, "22_FLAVIO_BOLSONARO": 84, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 166, "opositores_votos": 88, "pct_lula": 65.35, "pct_opositores": 34.65, "margem_lula": 78, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA", "endereco_oficial": "RUA 03, S/N BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0133", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1953", "aptos": 320, "comparecimento": 264, "faltosos": 56, "pct_abstencao": 17.5, "votos_nominais": 242, "votos_branco": 1, "votos_nulo": 21, "total_apurado": 264, "votos_validos": 244, "candidatos": {"13_LULA": 192, "22_FLAVIO_BOLSONARO": 44, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 8}, "lula_votos": 192, "opositores_votos": 52, "pct_lula": 78.69, "pct_opositores": 21.31, "margem_lula": 140, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CENTRO EDUCACIONAL AGROVILA", "endereco_oficial": "CONJUNTO AGROVILA, COITÉ-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0134", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1961", "aptos": 94, "comparecimento": 86, "faltosos": 8, "pct_abstencao": 8.51, "votos_nominais": 78, "votos_branco": 0, "votos_nulo": 8, "total_apurado": 86, "votos_validos": 82, "candidatos": {"13_LULA": 50, "22_FLAVIO_BOLSONARO": 30, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 50, "opositores_votos": 32, "pct_lula": 60.98, "pct_opositores": 39.02, "margem_lula": 18, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "ESCOLA REUNIDA DA LAGOA SECA", "endereco_oficial": "SITIO LAGOA SECA SITIO LAGOA SECA", "distrito": "Zona Rural / Sítios"}, {"secao": "0135", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1538", "aptos": 306, "comparecimento": 237, "faltosos": 69, "pct_abstencao": 22.55, "votos_nominais": 222, "votos_branco": 10, "votos_nulo": 5, "total_apurado": 237, "votos_validos": 232, "candidatos": {"13_LULA": 184, "22_FLAVIO_BOLSONARO": 44, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 184, "opositores_votos": 48, "pct_lula": 79.31, "pct_opositores": 20.69, "margem_lula": 136, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF JOÃO FURTADO MARANHÃO", "endereco_oficial": "SITIO CURTUME SAO MIGUEL-DISTRITO", "distrito": "Distrito de São Miguel"}, {"secao": "0136", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1643", "aptos": 276, "comparecimento": 235, "faltosos": 41, "pct_abstencao": 14.86, "votos_nominais": 218, "votos_branco": 5, "votos_nulo": 12, "total_apurado": 235, "votos_validos": 225, "candidatos": {"13_LULA": 158, "22_FLAVIO_BOLSONARO": 62, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 158, "opositores_votos": 67, "pct_lula": 70.22, "pct_opositores": 29.78, "margem_lula": 91, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF ZEFINHA CARTAXO", "endereco_oficial": "SITIO DANTAS DANTAS", "distrito": "Zona Rural / Sítios"}, {"secao": "0137", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1945", "aptos": 322, "comparecimento": 267, "faltosos": 55, "pct_abstencao": 17.08, "votos_nominais": 247, "votos_branco": 6, "votos_nulo": 14, "total_apurado": 267, "votos_validos": 245, "candidatos": {"13_LULA": 166, "22_FLAVIO_BOLSONARO": 70, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 7}, "lula_votos": 166, "opositores_votos": 79, "pct_lula": 67.76, "pct_opositores": 32.24, "margem_lula": 87, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA", "endereco_oficial": "RUA 03, S/N BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0138", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2020", "aptos": 324, "comparecimento": 279, "faltosos": 45, "pct_abstencao": 13.89, "votos_nominais": 262, "votos_branco": 5, "votos_nulo": 12, "total_apurado": 279, "votos_validos": 269, "candidatos": {"13_LULA": 205, "22_FLAVIO_BOLSONARO": 57, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 2, "70_AUGUSTO_CURY": 3}, "lula_votos": 205, "opositores_votos": 64, "pct_lula": 76.21, "pct_opositores": 23.79, "margem_lula": 141, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF ANTONIO LEITE DE ARAÚJO", "endereco_oficial": "SITIO CIPÓ PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0139", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2003", "aptos": 308, "comparecimento": 242, "faltosos": 66, "pct_abstencao": 21.43, "votos_nominais": 214, "votos_branco": 13, "votos_nulo": 15, "total_apurado": 242, "votos_validos": 225, "candidatos": {"13_LULA": 146, "22_FLAVIO_BOLSONARO": 71, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 6}, "lula_votos": 146, "opositores_votos": 79, "pct_lula": 64.89, "pct_opositores": 35.11, "margem_lula": 67, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CRECHE MUNDO ENCANTADO", "endereco_oficial": "AV. DR. FERNANDO TELES CARTAXO, S/N, BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0140", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2038", "aptos": 118, "comparecimento": 93, "faltosos": 25, "pct_abstencao": 21.19, "votos_nominais": 90, "votos_branco": 1, "votos_nulo": 2, "total_apurado": 93, "votos_validos": 90, "candidatos": {"13_LULA": 87, "22_FLAVIO_BOLSONARO": 2, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 87, "opositores_votos": 3, "pct_lula": 96.67, "pct_opositores": 3.33, "margem_lula": 84, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF BOM JESUS", "endereco_oficial": "SITIO LOBO NOVA SANTA CRUZ-DISTRITO", "distrito": "Distrito de Nova Santa Cruz"}, {"secao": "0141", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1244", "aptos": 322, "comparecimento": 251, "faltosos": 71, "pct_abstencao": 22.05, "votos_nominais": 238, "votos_branco": 5, "votos_nulo": 8, "total_apurado": 251, "votos_validos": 241, "candidatos": {"13_LULA": 181, "22_FLAVIO_BOLSONARO": 58, "14_RENAN_SANTOS": 1, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 0}, "lula_votos": 181, "opositores_votos": 60, "pct_lula": 75.1, "pct_opositores": 24.9, "margem_lula": 121, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF FIRMINO ARARUNA DE SOUSA", "endereco_oficial": "RUA ROSENDO MANOEL DE SOUSA, S/N ANAUA-DISTRITO", "distrito": "Distrito de Anauá"}, {"secao": "0142", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1201", "aptos": 293, "comparecimento": 255, "faltosos": 38, "pct_abstencao": 12.97, "votos_nominais": 240, "votos_branco": 3, "votos_nulo": 12, "total_apurado": 255, "votos_validos": 248, "candidatos": {"13_LULA": 157, "22_FLAVIO_BOLSONARO": 76, "14_RENAN_SANTOS": 6, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 8}, "lula_votos": 157, "opositores_votos": 91, "pct_lula": 63.31, "pct_opositores": 36.69, "margem_lula": 66, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEF OSSIAN ARARIPE", "endereco_oficial": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0143", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1333", "aptos": 300, "comparecimento": 249, "faltosos": 51, "pct_abstencao": 17.0, "votos_nominais": 236, "votos_branco": 6, "votos_nulo": 7, "total_apurado": 249, "votos_validos": 235, "candidatos": {"13_LULA": 184, "22_FLAVIO_BOLSONARO": 39, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 8}, "lula_votos": 184, "opositores_votos": 51, "pct_lula": 78.3, "pct_opositores": 21.7, "margem_lula": 133, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF MAJOR JOAQUIM ANTONIO FURTADO", "endereco_oficial": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0144", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2046", "aptos": 311, "comparecimento": 262, "faltosos": 49, "pct_abstencao": 15.76, "votos_nominais": 241, "votos_branco": 6, "votos_nulo": 15, "total_apurado": 262, "votos_validos": 252, "candidatos": {"13_LULA": 215, "22_FLAVIO_BOLSONARO": 30, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 215, "opositores_votos": 37, "pct_lula": 85.32, "pct_opositores": 14.68, "margem_lula": 178, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF MARIA DO SOCORRO SEVERINO OLIVEIRA", "endereco_oficial": "SITIO EXTREMA COITE-DISTRITO FUNCIONARÁ CENTRO VOCACIONAL TECNOLÓGICO Locais de Votação - Seções E Aptos Página 4 de 5", "distrito": "Distrito de Coité"}, {"secao": "0145", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1686", "aptos": 258, "comparecimento": 183, "faltosos": 75, "pct_abstencao": 29.07, "votos_nominais": 175, "votos_branco": 2, "votos_nulo": 6, "total_apurado": 183, "votos_validos": 179, "candidatos": {"13_LULA": 123, "22_FLAVIO_BOLSONARO": 53, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 0}, "lula_votos": 123, "opositores_votos": 56, "pct_lula": 68.72, "pct_opositores": 31.28, "margem_lula": 67, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEIF JARBAS PASSARINHO", "endereco_oficial": "SITIO SANTO ANTONIO DOS POSSEIROS ANAUA-DISTRITO", "distrito": "Distrito de Anauá"}, {"secao": "0146", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2054", "aptos": 94, "comparecimento": 88, "faltosos": 6, "pct_abstencao": 6.38, "votos_nominais": 85, "votos_branco": 1, "votos_nulo": 2, "total_apurado": 88, "votos_validos": 88, "candidatos": {"13_LULA": 80, "22_FLAVIO_BOLSONARO": 7, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 80, "opositores_votos": 8, "pct_lula": 90.91, "pct_opositores": 9.09, "margem_lula": 72, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CAPELA MÃE RAINHA", "endereco_oficial": "SITIO PANASCO", "distrito": "Zona Rural / Sítios"}, {"secao": "0147", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1945", "aptos": 313, "comparecimento": 266, "faltosos": 47, "pct_abstencao": 15.02, "votos_nominais": 245, "votos_branco": 11, "votos_nulo": 10, "total_apurado": 266, "votos_validos": 256, "candidatos": {"13_LULA": 139, "22_FLAVIO_BOLSONARO": 107, "14_RENAN_SANTOS": 6, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 3}, "lula_votos": 139, "opositores_votos": 117, "pct_lula": 54.3, "pct_opositores": 45.7, "margem_lula": 22, "status_tatico": "Competitivo / Risco (45-55%)", "prioridade_tatica": "Alta Prioridade", "local_oficial": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA", "endereco_oficial": "RUA 03, S/N BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0148", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1767", "aptos": 253, "comparecimento": 217, "faltosos": 36, "pct_abstencao": 14.23, "votos_nominais": 206, "votos_branco": 1, "votos_nulo": 10, "total_apurado": 217, "votos_validos": 211, "candidatos": {"13_LULA": 161, "22_FLAVIO_BOLSONARO": 48, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 0}, "lula_votos": 161, "opositores_votos": 50, "pct_lula": 76.3, "pct_opositores": 23.7, "margem_lula": 111, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF ANTONIO FURTADO DE OLIVEIRA", "endereco_oficial": "SITIO FURTUNA SEDE", "distrito": "Zona Rural / Sítios"}, {"secao": "0149", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1678", "aptos": 181, "comparecimento": 156, "faltosos": 25, "pct_abstencao": 13.81, "votos_nominais": 147, "votos_branco": 3, "votos_nulo": 6, "total_apurado": 156, "votos_validos": 153, "candidatos": {"13_LULA": 101, "22_FLAVIO_BOLSONARO": 44, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 101, "opositores_votos": 52, "pct_lula": 66.01, "pct_opositores": 33.99, "margem_lula": 49, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEF JOÃO LEITE DA SILVA", "endereco_oficial": "SITIO MACAMBIRA BURITIZINHO-DISTRITO", "distrito": "Distrito de Buritizinho"}, {"secao": "0150", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1953", "aptos": 321, "comparecimento": 258, "faltosos": 63, "pct_abstencao": 19.63, "votos_nominais": 243, "votos_branco": 2, "votos_nulo": 13, "total_apurado": 258, "votos_validos": 249, "candidatos": {"13_LULA": 180, "22_FLAVIO_BOLSONARO": 61, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 6}, "lula_votos": 180, "opositores_votos": 69, "pct_lula": 72.29, "pct_opositores": 27.71, "margem_lula": 111, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CENTRO EDUCACIONAL AGROVILA", "endereco_oficial": "CONJUNTO AGROVILA, COITÉ-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0151", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2003", "aptos": 311, "comparecimento": 261, "faltosos": 50, "pct_abstencao": 16.08, "votos_nominais": 241, "votos_branco": 4, "votos_nulo": 16, "total_apurado": 261, "votos_validos": 249, "candidatos": {"13_LULA": 177, "22_FLAVIO_BOLSONARO": 66, "14_RENAN_SANTOS": 0, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 5}, "lula_votos": 177, "opositores_votos": 72, "pct_lula": 71.08, "pct_opositores": 28.92, "margem_lula": 105, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE MUNDO ENCANTADO", "endereco_oficial": "AV. DR. FERNANDO TELES CARTAXO, S/N, BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0152", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1384", "aptos": 271, "comparecimento": 228, "faltosos": 43, "pct_abstencao": 15.87, "votos_nominais": 209, "votos_branco": 8, "votos_nulo": 11, "total_apurado": 228, "votos_validos": 207, "candidatos": {"13_LULA": 157, "22_FLAVIO_BOLSONARO": 43, "14_RENAN_SANTOS": 3, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 157, "opositores_votos": 50, "pct_lula": 75.85, "pct_opositores": 24.15, "margem_lula": 107, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE SRA. SANTANA", "endereco_oficial": "RUA MAJOR JOAQUIM FURTADO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0153", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2186", "aptos": 209, "comparecimento": 182, "faltosos": 27, "pct_abstencao": 12.92, "votos_nominais": 172, "votos_branco": 4, "votos_nulo": 6, "total_apurado": 182, "votos_validos": 170, "candidatos": {"13_LULA": 136, "22_FLAVIO_BOLSONARO": 28, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 136, "opositores_votos": 34, "pct_lula": 80.0, "pct_opositores": 20.0, "margem_lula": 102, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF JOÃO BATISTA MONTENEGRO", "endereco_oficial": "SÍTIO MACELA COITE-DISTRITO", "distrito": "Distrito de Coité"}, {"secao": "0154", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1171", "aptos": 268, "comparecimento": 232, "faltosos": 36, "pct_abstencao": 13.43, "votos_nominais": 221, "votos_branco": 5, "votos_nulo": 6, "total_apurado": 232, "votos_validos": 226, "candidatos": {"13_LULA": 155, "22_FLAVIO_BOLSONARO": 61, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 4}, "lula_votos": 155, "opositores_votos": 71, "pct_lula": 68.58, "pct_opositores": 31.42, "margem_lula": 84, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "EEM ANDRÉ CARTAXO", "endereco_oficial": "RUA CHAGAS SAMPAIO, S/N CENTRO", "distrito": "Centro"}, {"secao": "0155", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1333", "aptos": 299, "comparecimento": 246, "faltosos": 53, "pct_abstencao": 17.73, "votos_nominais": 230, "votos_branco": 7, "votos_nulo": 9, "total_apurado": 246, "votos_validos": 239, "candidatos": {"13_LULA": 181, "22_FLAVIO_BOLSONARO": 50, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 4}, "lula_votos": 181, "opositores_votos": 58, "pct_lula": 75.73, "pct_opositores": 24.27, "margem_lula": 123, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF MAJOR JOAQUIM ANTONIO FURTADO", "endereco_oficial": "RUA JOSÉ OZÁRIO, S/N UMBURANAS-DISTRITO", "distrito": "Distrito de Umburanas"}, {"secao": "0156", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1201", "aptos": 290, "comparecimento": 231, "faltosos": 59, "pct_abstencao": 20.34, "votos_nominais": 212, "votos_branco": 5, "votos_nulo": 14, "total_apurado": 231, "votos_validos": 228, "candidatos": {"13_LULA": 161, "22_FLAVIO_BOLSONARO": 61, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 2}, "lula_votos": 161, "opositores_votos": 67, "pct_lula": 70.61, "pct_opositores": 29.39, "margem_lula": 94, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEF OSSIAN ARARIPE", "endereco_oficial": "VILA DNOCS PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0157", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1945", "aptos": 319, "comparecimento": 256, "faltosos": 63, "pct_abstencao": 19.75, "votos_nominais": 239, "votos_branco": 2, "votos_nulo": 15, "total_apurado": 256, "votos_validos": 250, "candidatos": {"13_LULA": 155, "22_FLAVIO_BOLSONARO": 89, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 1}, "lula_votos": 155, "opositores_votos": 95, "pct_lula": 62.0, "pct_opositores": 38.0, "margem_lula": 60, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA", "endereco_oficial": "RUA 03, S/N BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0158", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1643", "aptos": 272, "comparecimento": 231, "faltosos": 41, "pct_abstencao": 15.07, "votos_nominais": 220, "votos_branco": 1, "votos_nulo": 10, "total_apurado": 231, "votos_validos": 227, "candidatos": {"13_LULA": 162, "22_FLAVIO_BOLSONARO": 60, "14_RENAN_SANTOS": 4, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 1}, "lula_votos": 162, "opositores_votos": 65, "pct_lula": 71.37, "pct_opositores": 28.63, "margem_lula": 97, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "EEIF ZEFINHA CARTAXO", "endereco_oficial": "SITIO DANTAS DANTAS", "distrito": "Zona Rural / Sítios"}, {"secao": "0161", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1139", "aptos": 255, "comparecimento": 196, "faltosos": 59, "pct_abstencao": 23.14, "votos_nominais": 181, "votos_branco": 2, "votos_nulo": 13, "total_apurado": 196, "votos_validos": 189, "candidatos": {"13_LULA": 122, "22_FLAVIO_BOLSONARO": 58, "14_RENAN_SANTOS": 5, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 3}, "lula_votos": 122, "opositores_votos": 67, "pct_lula": 64.55, "pct_opositores": 35.45, "margem_lula": 55, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "CRECHE ANA JÚLIA GOMES ALCÂNTARA", "endereco_oficial": "TRIANGULO DA PALESTINA, PALESTINA DO CARIRI-DISTRITO", "distrito": "Distrito de Palestina do Cariri"}, {"secao": "0162", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "2003", "aptos": 305, "comparecimento": 243, "faltosos": 62, "pct_abstencao": 20.33, "votos_nominais": 217, "votos_branco": 12, "votos_nulo": 14, "total_apurado": 243, "votos_validos": 227, "candidatos": {"13_LULA": 162, "22_FLAVIO_BOLSONARO": 60, "14_RENAN_SANTOS": 2, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 3}, "lula_votos": 162, "opositores_votos": 65, "pct_lula": 71.37, "pct_opositores": 28.63, "margem_lula": 97, "status_tatico": "Bastido Lula (>70%)", "prioridade_tatica": "Manutenção", "local_oficial": "CRECHE MUNDO ENCANTADO", "endereco_oficial": "AV. DR. FERNANDO TELES CARTAXO, S/N, BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0163", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1945", "aptos": 315, "comparecimento": 259, "faltosos": 56, "pct_abstencao": 17.78, "votos_nominais": 251, "votos_branco": 3, "votos_nulo": 5, "total_apurado": 259, "votos_validos": 250, "candidatos": {"13_LULA": 154, "22_FLAVIO_BOLSONARO": 79, "14_RENAN_SANTOS": 12, "55_RONALDO_CAIADO": 1, "70_AUGUSTO_CURY": 4}, "lula_votos": 154, "opositores_votos": 96, "pct_lula": 61.6, "pct_opositores": 38.4, "margem_lula": 58, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA", "endereco_oficial": "RUA 03, S/N BELA VISTA", "distrito": "Bairro Bela Vista"}, {"secao": "0164", "zona": "0076", "municipio": "14630 - Mauriti/CE", "local_votacao": "1945", "aptos": 314, "comparecimento": 272, "faltosos": 42, "pct_abstencao": 13.38, "votos_nominais": 252, "votos_branco": 9, "votos_nulo": 11, "total_apurado": 272, "votos_validos": 263, "candidatos": {"13_LULA": 159, "22_FLAVIO_BOLSONARO": 85, "14_RENAN_SANTOS": 13, "55_RONALDO_CAIADO": 0, "70_AUGUSTO_CURY": 6}, "lula_votos": 159, "opositores_votos": 104, "pct_lula": 60.46, "pct_opositores": 39.54, "margem_lula": 55, "status_tatico": "Dominado Lula (55-70%)", "prioridade_tatica": "Consolidação", "local_oficial": "E.E. PROFISSIONALIZANTE PE. JOÃO BOSCO DE LIMA", "endereco_oficial": "RUA 03, S/N BELA VISTA Locais de Votação - Seções E Aptos Página 5 de 5", "distrito": "Bairro Bela Vista"}];
+        const distritos = [{"distrito": "Bairro Serrinha", "secoes_count": 9, "aptos": 2126, "comparecimento": 1776, "faltosos": 350, "lula_votos": 1053, "flavio_votos": 553, "opositores_votos": 619, "votos_validos": 1672, "pct_lula": 62.98, "pct_opositores": 37.02, "pct_abstencao": 16.46, "margem": 434}, {"distrito": "Bairro Bela Vista", "secoes_count": 10, "aptos": 3147, "comparecimento": 2597, "faltosos": 550, "lula_votos": 1586, "flavio_votos": 794, "opositores_votos": 884, "votos_validos": 2470, "pct_lula": 64.21, "pct_opositores": 35.79, "pct_abstencao": 17.48, "margem": 702}, {"distrito": "Bairro Populares", "secoes_count": 1, "aptos": 346, "comparecimento": 291, "faltosos": 55, "lula_votos": 183, "flavio_votos": 87, "opositores_votos": 95, "votos_validos": 278, "pct_lula": 65.83, "pct_opositores": 34.17, "pct_abstencao": 15.9, "margem": 88}, {"distrito": "Centro", "secoes_count": 23, "aptos": 5919, "comparecimento": 5075, "faltosos": 847, "lula_votos": 3249, "flavio_votos": 1488, "opositores_votos": 1625, "votos_validos": 4874, "pct_lula": 66.66, "pct_opositores": 33.34, "pct_abstencao": 14.31, "margem": 1624}, {"distrito": "Sede / Outros", "secoes_count": 7, "aptos": 1742, "comparecimento": 1379, "faltosos": 363, "lula_votos": 949, "flavio_votos": 323, "opositores_votos": 361, "votos_validos": 1310, "pct_lula": 72.44, "pct_opositores": 27.56, "pct_abstencao": 20.84, "margem": 588}, {"distrito": "Distrito de São Miguel", "secoes_count": 8, "aptos": 2121, "comparecimento": 1734, "faltosos": 387, "lula_votos": 1192, "flavio_votos": 397, "opositores_votos": 442, "votos_validos": 1634, "pct_lula": 72.95, "pct_opositores": 27.05, "pct_abstencao": 18.25, "margem": 750}, {"distrito": "Distrito de São Félix", "secoes_count": 5, "aptos": 1221, "comparecimento": 958, "faltosos": 263, "lula_votos": 674, "flavio_votos": 199, "opositores_votos": 232, "votos_validos": 906, "pct_lula": 74.39, "pct_opositores": 25.61, "pct_abstencao": 21.54, "margem": 442}, {"distrito": "Distrito de Palestina do Cariri", "secoes_count": 19, "aptos": 5109, "comparecimento": 4243, "faltosos": 866, "lula_votos": 3029, "flavio_votos": 925, "opositores_votos": 1042, "votos_validos": 4071, "pct_lula": 74.4, "pct_opositores": 25.6, "pct_abstencao": 16.95, "margem": 1987}, {"distrito": "Distrito de Anauá", "secoes_count": 5, "aptos": 1506, "comparecimento": 1142, "faltosos": 364, "lula_votos": 825, "flavio_votos": 267, "opositores_votos": 276, "votos_validos": 1101, "pct_lula": 74.93, "pct_opositores": 25.07, "pct_abstencao": 24.17, "margem": 549}, {"distrito": "Zona Rural / Sítios", "secoes_count": 13, "aptos": 2885, "comparecimento": 2467, "faltosos": 418, "lula_votos": 1774, "flavio_votos": 527, "opositores_votos": 590, "votos_validos": 2364, "pct_lula": 75.04, "pct_opositores": 24.96, "pct_abstencao": 14.49, "margem": 1184}, {"distrito": "Distrito de Umburanas", "secoes_count": 12, "aptos": 3352, "comparecimento": 2815, "faltosos": 537, "lula_votos": 2020, "flavio_votos": 538, "opositores_votos": 607, "votos_validos": 2627, "pct_lula": 76.89, "pct_opositores": 23.11, "pct_abstencao": 16.02, "margem": 1413}, {"distrito": "Distrito de Buritizinho", "secoes_count": 15, "aptos": 3702, "comparecimento": 3088, "faltosos": 614, "lula_votos": 2267, "flavio_votos": 543, "opositores_votos": 655, "votos_validos": 2922, "pct_lula": 77.58, "pct_opositores": 22.42, "pct_abstencao": 16.59, "margem": 1612}, {"distrito": "Distrito de Coité", "secoes_count": 11, "aptos": 2916, "comparecimento": 2453, "faltosos": 463, "lula_votos": 1884, "flavio_votos": 403, "opositores_votos": 460, "votos_validos": 2344, "pct_lula": 80.38, "pct_opositores": 19.62, "pct_abstencao": 15.88, "margem": 1424}, {"distrito": "Distrito de Nova Santa Cruz", "secoes_count": 2, "aptos": 457, "comparecimento": 360, "faltosos": 97, "lula_votos": 302, "flavio_votos": 40, "opositores_votos": 42, "votos_validos": 344, "pct_lula": 87.79, "pct_opositores": 12.21, "pct_abstencao": 21.23, "margem": 260}];
+        const metadata = {"municipio": "Mauriti / CE", "zona_eleitoral": "0076", "eleicao": "Eleição Ordinária Federal - 2026", "data_coleta": "2026-10-05 10:12:28", "total_secoes_ativas": 140, "secoes_agregadas_ignoradas": 21, "pdf_locais_mapeados": true};
+
+        let currentFilter = 'all';
+        let selectedDistrict = 'all';
+        let currentView = 'grid';
+
+        function init() {
+            renderDistricts();
+            renderIntelRankings();
+            populateDistrictDropdown();
+            filterData();
+        }
+
+        function populateDistrictDropdown() {
+            const sel = document.getElementById('district-select');
+            distritos.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.distrito;
+                opt.textContent = `${d.distrito} (${d.secoes_count} seções)`;
+                sel.appendChild(opt);
+            });
+        }
+
+        function renderDistricts() {
+            const container = document.getElementById('district-cards-container');
+            container.innerHTML = distritos.map(d => `
+                <div class="district-card ${selectedDistrict === d.distrito ? 'active' : ''}" onclick="selectDistrictCard('${d.distrito}')">
+                    <div class="district-name">
+                        <span>${d.distrito}</span>
+                        <span style="color: ${d.pct_lula < 65 ? '#EF4444' : '#10B981'}; font-size: 0.9rem;">${d.pct_lula}%</span>
+                    </div>
+                    <div class="district-meta">
+                        ${d.secoes_count} seções | ${d.aptos} aptos | <span style="color:#F59E0B;">${d.faltosos} faltosos</span>
+                    </div>
+                    <div class="vote-bar">
+                        <div class="bar-lula" style="width: ${d.pct_lula}%;"></div>
+                        <div class="bar-opp" style="width: ${d.pct_opositores}%;"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectDistrictCard(dist) {
+            if (selectedDistrict === dist) {
+                selectedDistrict = 'all';
+            } else {
+                selectedDistrict = dist;
+            }
+            document.getElementById('district-select').value = selectedDistrict;
+            renderDistricts();
+            filterData();
+        }
+
+        function renderIntelRankings() {
+            const sortedOpp = [...rawSections].sort((a, b) => a.pct_lula - b.pct_lula).slice(0, 5);
+            const listOpp = document.getElementById('list-opp-top');
+            listOpp.innerHTML = sortedOpp.map((s, i) => `
+                <li class="ranking-item" onclick="openModal('${s.secao}')" style="cursor:pointer;">
+                    <div style="display: flex; align-items: center;">
+                        <span class="rank-badge top${i+1}">${i+1}</span>
+                        <div>
+                            <strong style="color: #FFF;">Seção ${s.secao}</strong> - <span style="font-size:0.8rem; color:#10B981;">${s.distrito}</span>
+                            <div style="font-size: 0.775rem; color: var(--text-muted);">${s.local_oficial}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="color: #EF4444; font-weight: 700; font-size: 0.95rem;">Lula ${s.pct_lula}%</span>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${s.opositores_votos} votos oposição</div>
+                    </div>
+                </li>
+            `).join('');
+
+            const sortedAbst = [...rawSections].sort((a, b) => b.faltosos - a.faltosos).slice(0, 5);
+            const listAbst = document.getElementById('list-abst-top');
+            listAbst.innerHTML = sortedAbst.map((s, i) => `
+                <li class="ranking-item" onclick="openModal('${s.secao}')" style="cursor:pointer;">
+                    <div style="display: flex; align-items: center;">
+                        <span class="rank-badge top${i+1}">${i+1}</span>
+                        <div>
+                            <strong style="color: #FFF;">Seção ${s.secao}</strong> - <span style="font-size:0.8rem; color:#F59E0B;">${s.distrito}</span>
+                            <div style="font-size: 0.775rem; color: var(--text-muted);">${s.local_oficial}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="color: #F59E0B; font-weight: 700; font-size: 0.95rem;">${s.faltosos} faltosos</span>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${s.pct_abstencao}% abstenção</div>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function setFilter(type, btn) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterData();
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.getElementById('tab-grid').classList.toggle('active', view === 'grid');
+            document.getElementById('tab-table').classList.toggle('active', view === 'table');
+            
+            document.getElementById('view-grid-container').style.display = view === 'grid' ? 'grid' : 'none';
+            document.getElementById('view-table-container').style.display = view === 'table' ? 'block' : 'none';
+        }
+
+        function filterData() {
+            const searchStr = document.getElementById('search-input').value.toLowerCase().trim();
+            const sortVal = document.getElementById('sort-select').value;
+            selectedDistrict = document.getElementById('district-select').value;
+
+            renderDistricts();
+
+            let filtered = rawSections.filter(s => {
+                // District filter
+                if (selectedDistrict !== 'all' && s.distrito !== selectedDistrict) return false;
+
+                // Search filter
+                const matchesSearch = s.secao.toLowerCase().includes(searchStr) || 
+                                     s.local_oficial.toLowerCase().includes(searchStr) ||
+                                     s.endereco_oficial.toLowerCase().includes(searchStr) ||
+                                     s.distrito.toLowerCase().includes(searchStr);
+                if (!matchesSearch) return false;
+
+                // Category filter
+                if (currentFilter === 'virada') return s.pct_lula < 65;
+                if (currentFilter === 'abstencao') return s.pct_abstencao >= 20;
+                if (currentFilter === 'bastiao') return s.pct_lula >= 75;
+
+                return true;
+            });
+
+            // Sorting
+            filtered.sort((a, b) => {
+                if (sortVal === 'lula_asc') return a.pct_lula - b.pct_lula;
+                if (sortVal === 'lula_desc') return b.pct_lula - a.pct_lula;
+                if (sortVal === 'opp_desc') return b.opositores_votos - a.opositores_votos;
+                if (sortVal === 'abst_desc') return b.faltosos - a.faltosos;
+                if (sortVal === 'sec_asc') return parseInt(a.secao) - parseInt(b.secao);
+                return 0;
+            });
+
+            renderGrid(filtered);
+            renderTable(filtered);
+        }
+
+        function getStatusBadge(s) {
+            if (s.pct_lula < 55) return '<span class="badge-status status-virada">🎯 ALVO VIRADA URGENTE</span>';
+            if (s.pct_lula < 65) return '<span class="badge-status status-risco">⚠️ ZONA COMPETITIVA</span>';
+            if (s.pct_lula < 75) return '<span class="badge-status status-dominado">⚡ DOMINADO LULA</span>';
+            return '<span class="badge-status status-bastiao">🏰 BASTIÃO (>75%)</span>';
+        }
+
+        function renderGrid(sections) {
+            const grid = document.getElementById('view-grid-container');
+            if (sections.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">Nenhuma seção encontrada com os filtros selecionados.</div>';
+                return;
+            }
+
+            grid.innerHTML = sections.map(s => `
+                <div class="sec-card" onclick="openModal('${s.secao}')">
+                    <div>
+                        <div class="sec-header">
+                            <div>
+                                <div class="sec-number">Seção ${s.secao}</div>
+                                <span style="font-size:0.75rem; color:#10B981; font-weight:700;">${s.distrito}</span>
+                            </div>
+                            ${getStatusBadge(s)}
+                        </div>
+
+                        <div class="sec-local">${s.local_oficial}</div>
+                        <div class="sec-address">📍 ${s.endereco_oficial || 'Endereço não disponível'}</div>
+
+                        <div class="vote-bar-container">
+                            <div class="vote-bar-labels">
+                                <span style="color: #10B981;">Lula: ${s.lula_votos} (${s.pct_lula}%)</span>
+                                <span style="color: #EF4444;">Opp: ${s.opositores_votos} (${s.pct_opositores}%)</span>
+                            </div>
+                            <div class="vote-bar">
+                                <div class="bar-lula" style="width: ${s.pct_lula}%;"></div>
+                                <div class="bar-opp" style="width: ${s.pct_opositores}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sec-stats">
+                        <div>
+                            <div class="stat-item-label">Aptos</div>
+                            <div class="stat-item-val">${s.aptos}</div>
+                        </div>
+                        <div>
+                            <div class="stat-item-label">Faltosos</div>
+                            <div class="stat-item-val" style="color: #F59E0B;">${s.faltosos}</div>
+                        </div>
+                        <div>
+                            <div class="stat-item-label">% Abstenção</div>
+                            <div class="stat-item-val" style="color: #F59E0B;">${s.pct_abstencao}%</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTable(sections) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = sections.map(s => `
+                <tr onclick="openModal('${s.secao}')" style="cursor: pointer;">
+                    <td style="font-weight: 700;">${s.secao}</td>
+                    <td><strong style="color:#FFF;">${s.local_oficial}</strong></td>
+                    <td><span style="color:#10B981; font-weight:600;">${s.distrito}</span></td>
+                    <td style="font-size:0.8rem; color:var(--text-muted);">${s.endereco_oficial}</td>
+                    <td>${s.aptos}</td>
+                    <td><span style="color: #F59E0B; font-weight: 600;">${s.faltosos} (${s.pct_abstencao}%)</span></td>
+                    <td><strong style="color: #10B981;">${s.lula_votos}</strong></td>
+                    <td>${s.candidatos['22_FLAVIO_BOLSONARO']}</td>
+                    <td><strong style="color: #10B981;">${s.pct_lula}%</strong></td>
+                    <td>${getStatusBadge(s)}</td>
+                    <td><button style="background: rgba(255,255,255,0.1); border:none; color:#FFF; padding:4px 8px; border-radius:6px; font-size:0.75rem; cursor:pointer;">Detalhes</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function openModal(secNum) {
+            const s = rawSections.find(x => x.secao === secNum);
+            if (!s) return;
+
+            const modal = document.getElementById('detail-modal');
+            const content = document.getElementById('modal-content');
+
+            content.innerHTML = `
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div style="font-size: 0.8rem; color: #10B981; font-weight:700; text-transform: uppercase;">LOCALIZAÇÃO E DIAGNÓSTICO TÁTICO</div>
+                <h2 class="font-space" style="font-size: 1.6rem; color: #FFF; margin-bottom: 4px;">Seção Eleitoral ${s.secao}</h2>
+                <div style="font-weight:700; font-size:1.05rem; color:#FFF; margin-bottom: 2px;">${s.local_oficial}</div>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">
+                    📍 ${s.endereco_oficial} | <strong>${s.distrito}</strong> | ZN 0076 (Mauriti/CE)
+                </p>
+
+                <div style="background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div><span style="color: var(--text-dim); font-size: 0.8rem;">VOTOS VÁLIDOS:</span> <strong style="color:#FFF;">${s.votos_validos}</strong></div>
+                        <div><span style="color: var(--text-dim); font-size: 0.8rem;">ABSTENÇÃO / FALTOSOS:</span> <strong style="color:#F59E0B;">${s.faltosos} (${s.pct_abstencao}%)</strong></div>
+                        <div><span style="color: var(--text-dim); font-size: 0.8rem;">VOTOS BRANCOS:</span> <strong style="color:#FFF;">${s.votos_branco}</strong></div>
+                        <div><span style="color: var(--text-dim); font-size: 0.8rem;">VOTOS NULOS:</span> <strong style="color:#FFF;">${s.votos_nulo}</strong></div>
+                    </div>
+                </div>
+
+                <h4 style="color: #FFF; font-size: 0.95rem; margin-bottom: 12px;">Votação por Candidato:</h4>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); padding: 10px 14px; border-radius: 10px;">
+                        <div><strong style="color:#10B981;">13 - LULA</strong></div>
+                        <div style="text-align: right;"><strong style="color:#10B981; font-size: 1.1rem;">${s.lula_votos}</strong> <span style="font-size:0.8rem; color:var(--text-muted);">(${s.pct_lula}%)</span></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); padding: 10px 14px; border-radius: 10px;">
+                        <div><strong style="color:#EF4444;">22 - FLÁVIO BOLSONARO</strong></div>
+                        <div style="text-align: right;"><strong style="color:#EF4444; font-size: 1.1rem;">${s.candidatos['22_FLAVIO_BOLSONARO']}</strong></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 14px; border-radius: 10px; font-size:0.85rem;">
+                        <span>70 - AUGUSTO CURY</span>
+                        <strong>${s.candidatos['70_AUGUSTO_CURY']} votos</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 14px; border-radius: 10px; font-size:0.85rem;">
+                        <span>14 - RENAN SANTOS</span>
+                        <strong>${s.candidatos['14_RENAN_SANTOS']} votos</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 14px; border-radius: 10px; font-size:0.85rem;">
+                        <span>55 - RONALDO CAIADO</span>
+                        <strong>${s.candidatos['55_RONALDO_CAIADO']} votos</strong>
+                    </div>
+                </div>
+
+                <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 14px; border-radius: 12px;">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: #F59E0B; text-transform: uppercase;">💡 Recomendação Tática de Campo:</div>
+                    <p style="font-size: 0.85rem; color: #F3F4F6; margin-top: 4px; line-height: 1.4;">
+                        ${s.pct_lula < 65 ? 
+                            `Área prioritária no <strong>${s.distrito}</strong>! A oposição somou <strong>${s.opositores_votos} votos</strong> na escola <em>${s.local_oficial}</em> (${s.endereco_oficial}). Ação de campo focada na mobilização dos <strong>${s.faltosos} eleitores faltosos</strong>.` : 
+                            `Desempenho consolidado com <strong>${s.pct_lula}%</strong> no <strong>${s.distrito}</strong>. Garantir apoio logístico e acompanhamento no local <em>${s.local_oficial}</em> para resgatar os ${s.faltosos} faltosos.`
+                        }
+                    </p>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').style.display = 'none';
+        }
+
+        function exportCSV() {
+            let csv = 'Secao,Distrito,Local_Oficial,Endereco,Aptos,Comparecimento,Faltosos,Pct_Abstencao,Votos_Nominais,Votos_Branco,Votos_Nulo,Lula_Votos,Flavio_Votos,Renan_Votos,Caiado_Votos,Cury_Votos,Total_Opositores,Pct_Lula,Status_Tatico\n';
+            rawSections.forEach(s => {
+                csv += `${s.secao},"${s.distrito}","${s.local_oficial}","${s.endereco_oficial}",${s.aptos},${s.comparecimento},${s.faltosos},${s.pct_abstencao},${s.votos_nominais},${s.votos_branco},${s.votos_nulo},${s.lula_votos},${s.candidatos['22_FLAVIO_BOLSONARO']},${s.candidatos['14_RENAN_SANTOS']},${s.candidatos['55_RONALDO_CAIADO']},${s.candidatos['70_AUGUSTO_CURY']},${s.opositores_votos},${s.pct_lula},"${s.status_tatico}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('download', 'relatorio_tatico_locais_mauriti.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('detail-modal');
+            if (event.target === modal) closeModal();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
